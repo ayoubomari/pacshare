@@ -1,0 +1,133 @@
+main {
+    background-image: url(./../img/backgrounds/pattern1.png);
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+}
+
+.continer{
+    color: #d0d0ef;
+    position: relative;
+    background-color: #01023e;
+    width: 1000px;
+    min-height: 280px;
+    margin: 132px 0 50px 0;
+    font-family: 'Heebo', sans-serif;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: space-around;
+}
+
+.continer {
+    padding: 30px 15px;
+}
+
+main > a {
+    position: absolute;
+}
+
+.logo {
+    width: 60px;
+    height: auto;
+    border-radius: 70%;
+    margin: 5px;
+    cursor: pointer;
+    position: absolute;
+    top: -70px;
+    transform: translateX(-30px);
+}
+
+@media all and (max-width: 1125px) {
+    .continer{
+        width: 885px;
+    }   
+}
+
+@media all and (max-width: 1025px) {
+    .continer{
+        width: 700px;
+    }   
+}
+
+@media all and (max-width: 834px) {
+    .continer{
+        width: 625px;
+    }  
+}
+
+
+
+@media all and (max-width: 758px) {
+    .continer{
+        width: 500px;
+    }  
+
+    #illustration {
+        width: 55%;
+    }
+}
+
+@media (max-width: 530px) {
+    .continer{
+        width: 95%;
+        padding: 0;
+        height: auto;
+    }
+}
+
+#error-info {
+    width: 40%;
+    height: 200px;
+
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: flex-start;
+    justify-content: space-around;
+}
+
+#error-info a {
+    text-decoration: none;
+    color: #d0d0ef;
+    font-size: 1.5rem;
+}
+
+#error-type > span {
+    font-weight: 800;
+}
+
+#illustration {
+    width: 40%;
+    
+}
+
+#illustration img{
+    width: 100%;
+}
+
+
+@media all and (max-width: 758px) {
+    #illustration {
+        width: 55%;
+    }
+}
+
+@media all and (max-width: 530px){
+    .logo{
+        display: none;
+    }
+    #error-info {
+        width: 80%;
+    }
+
+    #error-info a {
+        font-size: 1.2rem;
+    }
+    
+    #illustration{
+        display: none;
+    }
+}

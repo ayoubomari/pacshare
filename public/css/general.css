@@ -1,0 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap'); /*font-family: 'Dancing Script', cursive;*/ /*for icons*/
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap'); /*font-family: 'Roboto', sans-serif;*/ /*for list*/
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@1,600&display=swap'); /*font-family: 'Open Sans', sans-serif;*/ /*for text*/
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@500&display=swap'); /*font-family: 'Heebo', sans-serif;*/
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');/*font-family: 'Roboto Mono', monospace;*/
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}

@@ -1,0 +1,73 @@
+main{
+    min-height: 100vh;
+    width: 100%;
+    background-image: url(./../img/backgrounds/minimalisme.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+
+main .continer {
+    margin: 70px 0 0 0;
+    padding: 0 10px;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+}
+
+main .continer .brand {
+    width: 90px;
+    height: auto;
+    margin: 0 0 40px 0;
+    border-radius: 70%;
+    cursor: pointer;
+}
+
+main .continer #intro {
+    font-size: 2.2rem;
+    color: #0a0a0a;
+    width: 100%;
+    text-align: center;
+    line-height: 2.6rem;
+    font-family: 'Roboto Mono', monospace;
+}
+
+
+
+@media all and (max-width: 950px) {
+    main .continer #intro {
+        font-size: 2rem;
+        color: #131313;
+    }
+}
+@media all and (max-width: 880px) {
+    main .continer {
+        margin: 100px 0 0 0;
+    }
+    main .continer .brand {
+        width: 60px;
+    }
+    main .continer #intro {
+        font-size: 1.5rem;
+    }
+}
+@media all and (max-width: 710px) {
+    main .continer #intro {
+        font-size: 1.2rem;
+    }
+}
+@media all and (max-width: 560px) {
+    main .continer #intro {
+        font-size: 1.09rem;
+        width: 272px;
+        line-height: 1.7rem;
+    }
+}
