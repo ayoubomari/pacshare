@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/ayoubomari/pacshare/app/controllers"
+	"github.com/ayoubomari/pacshare/app/controllers/facebook"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -12,9 +12,7 @@ func RegisterAPI(api fiber.Router) {
 func registerwebhooks(api fiber.Router) {
 	webhooks := api.Group("/webhook")
 
-	webhooks.Get("/", controllers.FacebookGet)
+	webhooks.Get("/", facebook.FacebookGet)
 
-	webhooks.Post("/", func(c *fiber.Ctx) error {
-		return c.Status(fiber.StatusOK).SendString("hello world")
-	})
+	webhooks.Post("/", facebook.FacebookPost)
 }
