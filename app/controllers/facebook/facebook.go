@@ -86,7 +86,7 @@ func handleMessage(sender_psid string, message facebook.Message) error {
 }
 
 // handle attachment message come from facebook
-func handlePostback(sender_psid string, message facebook.PostBack) error {
+func handlePostback(sender_psid string, postback facebook.PostBack) error {
 	response := facebook.ResponseMessage{
 		Text: "hi from handle postback",
 	}

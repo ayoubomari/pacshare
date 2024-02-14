@@ -8,14 +8,14 @@ type FacebookWebhookBody struct {
 
 type PageEntry struct {
 	ID        string      `json:"id"`
-	Time      int64       `json:"time"`
+	Time      int         `json:"time"`
 	Messaging []Messaging `json:"messaging"`
 }
 
 type Messaging struct {
 	Sender    Sender    `json:"sender"`
 	Recipient Recipient `json:"recipient"`
-	Timestamp int64     `json:"timestamp"`
+	Timestamp int       `json:"timestamp"`
 	Message   Message   `json:"message,omitempty"`
 	PostBack  PostBack  `json:"postback,omitempty"`
 }
@@ -29,21 +29,26 @@ type Recipient struct {
 }
 
 type Message struct {
-	MID         string       `json:"mid"`
-	Text        string       `json:"text,omitempty"`
-	Attachments []Attachment `json:"attachments,omitempty"`
+	MID         string            `json:"mid"`
+	Text        string            `json:"text,omitempty"`
+	Attachments []MediaAttachment `json:"attachments,omitempty"`
+	Reply_to    MID               `json:"reply_to,omitempty"`
+}
+type MID struct {
+	MID string `json:"mid"`
 }
 
-type Attachment struct {
+// this can be use to send and recieve media message such as (image, audio, file, location...)
+type MediaAttachment struct {
 	Type    string                       `json:"type"`
 	Payload WebhookBodyAttachmentPayload `json:"payload"`
 }
 
 type WebhookBodyAttachmentPayload struct {
-	URL         string                           `json:"url,omitempty"`
-	Is_reusable bool                             `json:"is_reusable,omitempty"`
-	Title       string                           `json:"title,omitempty"`
-	Coordinates WebhookBodyAttachmentCoordinates `json:"coordinates,omitempty"`
+	URL         string                            `json:"url,omitempty"`
+	Is_reusable bool                              `json:"is_reusable,omitempty"`
+	Title       string                            `json:"title,omitempty"`
+	Coordinates *WebhookBodyAttachmentCoordinates `json:"coordinates,omitempty"`
 }
 
 type WebhookBodyAttachmentCoordinates struct {

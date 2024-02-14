@@ -6,8 +6,8 @@ import (
 	"net/http"
 )
 
-// send a Post request with json body bytes body and query strings
-func PostJSONRequestWithQuery(url string, jsonBytes []byte, headers map[string]string, queryParams map[string]string) (*http.Response, error) {
+// send a request with json body bytes body and query strings
+func JSONRequestWithQuery(method string, url string, jsonBytes []byte, headers map[string]string, queryParams map[string]string) (*http.Response, error) {
 	// Create URL with query parameters
 	fullURL := url
 	if len(queryParams) > 0 {
@@ -21,7 +21,7 @@ func PostJSONRequestWithQuery(url string, jsonBytes []byte, headers map[string]s
 		fullURL += "?" + query
 	}
 
-	req, err := http.NewRequest("POST", fullURL, bytes.NewBuffer(jsonBytes))
+	req, err := http.NewRequest(method, fullURL, bytes.NewBuffer(jsonBytes))
 	if err != nil {
 		return nil, fmt.Errorf("Error creating request: %v", err)
 	}
@@ -42,10 +42,10 @@ func PostJSONRequestWithQuery(url string, jsonBytes []byte, headers map[string]s
 	return resp, nil
 }
 
-// send a Post request with json body bytes
+// send a request with json body bytes
 // Note: you have to include query strings into url string
-func PostJSONReqest(url string, jsonBytes []byte, headers map[string]string) (*http.Response, error) {
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonBytes))
+func JSONReqest(method string, url string, jsonBytes []byte, headers map[string]string) (*http.Response, error) {
+	req, err := http.NewRequest(method, url, bytes.NewBuffer(jsonBytes))
 	if err != nil {
 		return nil, fmt.Errorf("Error creating request: %v", err)
 	}
