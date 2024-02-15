@@ -92,10 +92,10 @@ func CallSendAPI(sender_psid string, response interface{}) error {
 		if err != nil {
 			return fmt.Errorf("CallSendAPI: %w", err)
 		}
-	} else if responseResponseAction, ok := response.(facebook.ResponseResponseAction); ok {
+	} else if responseResponseAction, ok := response.(string); ok {
 		requestBody := facebook.ResponseWithResponseAction{
-			Recipient:      facebook.ResponseRecipient{ID: sender_psid},
-			ResponseAction: responseResponseAction,
+			Recipient:     facebook.ResponseRecipient{ID: sender_psid},
+			Sender_action: responseResponseAction,
 		}
 		bodyJsonBytes, err := json.Marshal(requestBody)
 		if err != nil {
@@ -107,7 +107,7 @@ func CallSendAPI(sender_psid string, response interface{}) error {
 			return fmt.Errorf("CallSendAPI: %w", err)
 		}
 	} else {
-		return errors.New("the response formart doesn't math any of the available formats.")
+		return errors.New("the response formart doesn't math any of the available formats")
 	}
 	return nil
 }

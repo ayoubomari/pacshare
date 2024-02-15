@@ -84,6 +84,15 @@ func TestSendFacebookButtonTamplateAttachment(t *testing.T) {
 	}
 }
 
+func TestSendFacebookResponseAction(t *testing.T) {
+	sender_psid := "4345084215546247"
+	response := "TYPING_ON"
+	err := facebook.CallSendAPI(sender_psid, response)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestGetFacebookMessageInfo(t *testing.T) {
 	mid := "m_CnahzSvUI_YxZZhSiXZ0jpFs0JtiuDOO_WqFxoAp5dZbGnBcbn38q3qYSIRJxtA3JC9TnhK6Bdyig7BMuJDTww"
 	messageInfo, err := facebook.GetMessageInfo(mid)

@@ -20,8 +20,9 @@ type ResponseWithTemplateAttachment struct {
 
 // facebook action as a response
 type ResponseWithResponseAction struct {
-	Recipient      ResponseRecipient      `json:"recipient"`
-	ResponseAction ResponseResponseAction `json:"attachment"`
+	Recipient ResponseRecipient `json:"recipient"`
+	// MARK_SEEN | TYPING_ON | TYPING_OFF | REACT | UNREACT
+	Sender_action string `json:"sender_action"`
 }
 
 // id: sender_id string

@@ -1,5 +1,6 @@
 package facebook
 
+// get message info return format
 type ConversationMessage struct {
 	From        ConversationFrom        `json:"from,omitempty"`
 	Message     string                  `json:"message,omitempty"`
