@@ -8,6 +8,7 @@ import (
 	facebookModel "github.com/ayoubomari/pacshare/app/models/facebook"
 )
 
+// test seding text message
 func TestSendFacebookMessage(t *testing.T) {
 	sender_psid := "4345084215546247"
 	response := facebookModel.ResponseMessage{
@@ -19,12 +20,13 @@ func TestSendFacebookMessage(t *testing.T) {
 	}
 }
 
+// test seding media message
 func TestSendFacebookMediaAttachment(t *testing.T) {
 	sender_psid := "4345084215546247"
 	response := facebookModel.ResponseMediaAttachment{
 		Type: "video",
 		Payload: facebookModel.WebhookBodyAttachmentPayload{
-			URL:         "https://rr1---sn-5hnednss.googlevideo.com/videoplayback?expire=1707937379&ei=A7rMZa-eC6rY6dsPlYGHyAU&ip=2a0a%3A4cc0%3A1%3A11a2%3Af5ea%3A9331%3A64ee%3A6d9b&id=o-AG41sUa_0O0pFfdSGTjs8inidG2xCPNCMenGbham4dkF&itag=18&source=youtube&requiressl=yes&xpc=EgVo2aDSNQ%3D%3D&vprv=1&svpuc=1&mime=video%2Fmp4&cnr=14&ratebypass=yes&dur=25.147&lmt=1688629803719031&fexp=24007246&c=ANDROID&txp=1438434&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cxpc%2Cvprv%2Csvpuc%2Cmime%2Ccnr%2Cratebypass%2Cdur%2Clmt&sig=AJfQdSswRAIgRCSqhYlHTUllcAogkalogkVFSAJAIPgIIm79hqxYkc4CICjGzoz40y-4RIU7FnmgS6isIf1-2qSr29hck2VxJn0Z&host=rr2---sn-5oxmp55u-8pxe.googlevideo.com&rm=sn-5oxmp55u-8pxe7l,sn-4g5erz7z&req_id=a13b44c114e636e2&ipbypass=yes&redirect_counter=3&cm2rm=sn-apns7s&cms_redirect=yes&cmsv=e&mh=u1&mip=105.158.228.125&mm=34&mn=sn-5hnednss&ms=ltu&mt=1707916147&mv=m&mvi=1&pl=21&lsparams=ipbypass,mh,mip,mm,mn,ms,mv,mvi,pl&lsig=APTiJQcwRgIhAPclYdozr88uJYuwUMPpFeMnI2htRm5YqZBIL3kvXXcWAiEA_CWZCFNKjFJwtVBUmN4aN_Xeg17AyUbiL0YWjwvvXvk%3D",
+			URL:         "pacshare.omzor.com/src/videos/woody.mp4",
 			Is_reusable: false,
 		},
 	}
@@ -34,6 +36,7 @@ func TestSendFacebookMediaAttachment(t *testing.T) {
 	}
 }
 
+// test seding geniric template message
 func TestSendFacebookGeniricTamplateAttachment(t *testing.T) {
 	sender_psid := "4345084215546247"
 	response := facebookModel.ResponseTemplateAttachment{
@@ -62,6 +65,7 @@ func TestSendFacebookGeniricTamplateAttachment(t *testing.T) {
 	}
 }
 
+// test seding button template message
 func TestSendFacebookButtonTamplateAttachment(t *testing.T) {
 	sender_psid := "4345084215546247"
 	response := facebookModel.ResponseTemplateAttachment{
@@ -84,6 +88,7 @@ func TestSendFacebookButtonTamplateAttachment(t *testing.T) {
 	}
 }
 
+// test seding response action like TYPING_ON
 func TestSendFacebookResponseAction(t *testing.T) {
 	sender_psid := "4345084215546247"
 	response := "TYPING_ON"
@@ -93,6 +98,7 @@ func TestSendFacebookResponseAction(t *testing.T) {
 	}
 }
 
+// test to get facebook message info
 func TestGetFacebookMessageInfo(t *testing.T) {
 	mid := "m_CnahzSvUI_YxZZhSiXZ0jpFs0JtiuDOO_WqFxoAp5dZbGnBcbn38q3qYSIRJxtA3JC9TnhK6Bdyig7BMuJDTww"
 	messageInfo, err := facebook.GetMessageInfo(mid)
@@ -100,4 +106,14 @@ func TestGetFacebookMessageInfo(t *testing.T) {
 		t.Fatal(err)
 	}
 	fmt.Printf("%+v\n", messageInfo)
+}
+
+// test to get facebook sender info
+func TestGetFacebookSenderInfo(t *testing.T) {
+	sender_psid := "4345084215546247"
+	senderInfo, err := facebook.GetSenderInfo(sender_psid)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("%+v\n", senderInfo)
 }

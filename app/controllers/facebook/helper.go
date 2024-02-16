@@ -20,18 +20,18 @@ func facebookSendRequest(sender_psid string, requestBodyBytes []byte) error {
 		make(map[string]string),
 	)
 	if err != nil {
-		return fmt.Errorf("CallSendAPI: %w", err)
+		return fmt.Errorf("facebookSendRequest: %w", err)
 	}
 	defer res.Body.Close()
 
 	bodyBytes, err := io.ReadAll(res.Body)
 	if err != nil {
-		return fmt.Errorf("CallSendAPI: %w", err)
+		return fmt.Errorf("facebookSendRequest: %w", err)
 	}
 	var bodyJson facebook.CallSendAPIResonse
 	err = json.Unmarshal(bodyBytes, &bodyJson)
 	if err != nil {
-		return fmt.Errorf("CallSendAPI: %w", err)
+		return fmt.Errorf("facebookSendRequest: %w", err)
 	}
 	if bodyJson.Error.Message != "" {
 		fmt.Println("facebook was returned an error", bodyJson.Error.Message)
@@ -137,18 +137,43 @@ func GetMessageInfo(mid string) (facebook.ConversationMessage, error) {
 		make(map[string]string),
 	)
 	if err != nil {
-		return conversationMessage, fmt.Errorf("CallSendAPI: %w", err)
+		return conversationMessage, fmt.Errorf("GetMessageInfo: %w", err)
 	}
 	defer res.Body.Close()
 
 	bodyBytes, err := io.ReadAll(res.Body)
 	if err != nil {
-		return conversationMessage, fmt.Errorf("CallSendAPI: %w", err)
+		return conversationMessage, fmt.Errorf("GetMessageInfo: %w", err)
 	}
 	err = json.Unmarshal(bodyBytes, &conversationMessage)
 	if err != nil {
-		return conversationMessage, fmt.Errorf("CallSendAPI: %w", err)
+		return conversationMessage, fmt.Errorf("GetMessageInfo: %w", err)
 	}
 
 	return conversationMessage, nil
+}
+
+func GetSenderInfo(sender_psid string) (facebook.SenderInfo, error) {
+	var senderInfo facebook.SenderInfo
+	res, err := request.JSONReqest(
+		"GET",
+		fmt.Sprintf("https://graph.facebook.com/%s?fields=first_name,last_name,profile_pic&access_token=%s", sender_psid, os.Getenv("FACEBOOK_PAGE_ACCESS_TOKEN")),
+		make([]byte, 0),
+		make(map[string]string),
+	)
+	if err != nil {
+		return senderInfo, fmt.Errorf("GetSenderInfo: %w", err)
+	}
+	defer res.Body.Close()
+
+	bodyBytes, err := io.ReadAll(res.Body)
+	if err != nil {
+		return senderInfo, fmt.Errorf("GetSenderInfo: %w", err)
+	}
+	err = json.Unmarshal(bodyBytes, &senderInfo)
+	if err != nil {
+		return senderInfo, fmt.Errorf("GetSenderInfo: %w", err)
+	}
+
+	return senderInfo, nil
 }

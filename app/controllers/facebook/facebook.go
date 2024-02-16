@@ -3,9 +3,16 @@ package facebook
 import (
 	"fmt"
 	"os"
+	"regexp"
+	"strings"
 
 	"github.com/ayoubomari/pacshare/app/models/facebook"
 	"github.com/gofiber/fiber/v2"
+
+	"github.com/ayoubomari/pacshare/app/controllers/scrapers/apk"
+	"github.com/ayoubomari/pacshare/app/controllers/scrapers/pdf"
+	"github.com/ayoubomari/pacshare/app/controllers/scrapers/wiki"
+	"github.com/ayoubomari/pacshare/app/controllers/scrapers/yt"
 )
 
 // fiber reqest hundler for GET: /webhook
@@ -75,24 +82,135 @@ func FacebookPost(c *fiber.Ctx) error {
 
 // handle message come from facebook (text message)
 func handleMessage(sender_psid string, message facebook.Message) error {
-	response := facebook.ResponseMessage{
-		Text: "hi from handle message",
+	// work with lower case from now one
+	messageLowerCase := strings.ToLower(message.Text)
+
+	// redirect to specific regex hundler
+
+	// yt -> ^(.yt) (.+)$
+	ytRegex := regexp.MustCompile("^(.yt) (.+)$")
+	if match := ytRegex.FindStringSubmatch(messageLowerCase); match != nil {
+		return yt.RegexHundlerMessage(match[1:])
 	}
-	err := CallSendAPI(sender_psid, response)
-	if err != nil {
-		return fmt.Errorf("handleMessage: %w", err)
+
+	// wiki -> ^(.wiki)( |-)([a-z]{2}) (.+)$
+	wikiRegex := regexp.MustCompile("^(.wiki)( |-)([a-z]{2}) (.+)$")
+	if match := wikiRegex.FindStringSubmatch(messageLowerCase); match != nil {
+		return wiki.RegexHundlerMessage(match[1:])
 	}
-	return nil
+
+	// apk -> ^(.apk) (.+)$
+	apkRegex := regexp.MustCompile("^(.apk) (.+)$")
+	if match := apkRegex.FindStringSubmatch(messageLowerCase); match != nil {
+		return apk.RegexHundlerMessage(match[1:])
+	}
+
+	// pdf -> ^(.pdf) (.+)$
+	pdfRegex := regexp.MustCompile("^(.pdf) (.+)$")
+	if match := pdfRegex.FindStringSubmatch(messageLowerCase); match != nil {
+		return pdf.RegexHundlerMessage(match[1:])
+	}
+
+	//default
+	return yt.RegexHundlerMessage([]string{
+		fmt.Sprintf(".yt %s", messageLowerCase),
+		".yt",
+		messageLowerCase,
+	})
 }
 
 // handle attachment message come from facebook
 func handlePostback(sender_psid string, postback facebook.PostBack) error {
-	response := facebook.ResponseMessage{
-		Text: "hi from handle postback",
+	// global postbacks
+	switch postback.Payload {
+	case "GET_STARTED_PAYLOAD":
+		response := facebook.ResponseMessage{
+			Text: "Hi, how can I help you?",
+		}
+		err := CallSendAPI(sender_psid, response)
+		if err != nil {
+			return fmt.Errorf("handleMessage: %w", err)
+		}
+		return nil
+
+	// for menu
+	case "YOUTUBE":
+		response := facebook.ResponseMessage{
+			Text: "for youtube",
+		}
+		err := CallSendAPI(sender_psid, response)
+		if err != nil {
+			return fmt.Errorf("handleMessage: %w", err)
+		}
+		return nil
+	case "REVIEW":
+		response := facebook.ResponseMessage{
+			Text: "for review",
+		}
+		err := CallSendAPI(sender_psid, response)
+		if err != nil {
+			return fmt.Errorf("handleMessage: %w", err)
+		}
+		return nil
+	case "HELP":
+		response := facebook.ResponseMessage{
+			Text: "for help",
+		}
+		err := CallSendAPI(sender_psid, response)
+		if err != nil {
+			return fmt.Errorf("handleMessage: %w", err)
+		}
+		return nil
+	case "SUPPORT_US":
+		response := facebook.ResponseMessage{
+			Text: "for SUPPORT_US",
+		}
+		err := CallSendAPI(sender_psid, response)
+		if err != nil {
+			return fmt.Errorf("handleMessage: %w", err)
+		}
+		return nil
+	case "DOWNLOAD_PACSHARE_APP":
+		response := facebook.ResponseMediaAttachment{
+			Type: "file",
+			Payload: facebook.WebhookBodyAttachmentPayload{
+				URL:         "pacshare.omzor.com/static_src/apks/pacshare.apk",
+				Is_reusable: false,
+			},
+		}
+		err := CallSendAPI(sender_psid, response)
+		if err != nil {
+			return fmt.Errorf("handleMessage: %w", err)
+		}
+		return nil
 	}
-	err := CallSendAPI(sender_psid, response)
-	if err != nil {
-		return fmt.Errorf("handleMessage: %w", err)
+
+	// redirect to specific regex hundler
+
+	// yt -> ^(YT_::_)(.+)$
+	ytRegex := regexp.MustCompile("^(YT_::_)(.+)$")
+	if match := ytRegex.FindStringSubmatch(postback.Payload); match != nil {
+		return yt.RegexHundlerPostback(match[1:])
 	}
+
+	// wiki -> ^(WIKI_::_)(.+)$
+	wikiRegex := regexp.MustCompile("^(WIKI_::_)(.+)$")
+	if match := wikiRegex.FindStringSubmatch(postback.Payload); match != nil {
+		return wiki.RegexHundlerPostback(match[1:])
+	}
+
+	// apk -> ^(APK_::_)(.+)$
+	apkRegex := regexp.MustCompile("^(APK_::_)(.+)$")
+	if match := apkRegex.FindStringSubmatch(postback.Payload); match != nil {
+		return apk.RegexHundlerPostback(match[1:])
+	}
+
+	// pdf -> ^(PDF_::_)(.+)$
+	pdfRegex := regexp.MustCompile("^(PDF_::_)(.+)$")
+	if match := pdfRegex.FindStringSubmatch(postback.Payload); match != nil {
+		return pdf.RegexHundlerPostback(match[1:])
+	}
+
+	//default
 	return nil
 }
