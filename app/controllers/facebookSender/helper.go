@@ -1,4 +1,4 @@
-package facebook
+package facebookSender
 
 import (
 	"encoding/json"

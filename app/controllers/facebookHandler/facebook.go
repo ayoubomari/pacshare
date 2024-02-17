@@ -1,4 +1,4 @@
-package facebook
+package facebookHandler
 
 import (
 	"fmt"
@@ -9,13 +9,14 @@ import (
 	"github.com/ayoubomari/pacshare/app/models/facebook"
 	"github.com/gofiber/fiber/v2"
 
+	"github.com/ayoubomari/pacshare/app/controllers/facebookSender"
 	"github.com/ayoubomari/pacshare/app/controllers/scrapers/apk"
 	"github.com/ayoubomari/pacshare/app/controllers/scrapers/pdf"
 	"github.com/ayoubomari/pacshare/app/controllers/scrapers/wiki"
 	"github.com/ayoubomari/pacshare/app/controllers/scrapers/yt"
 )
 
-// fiber reqest hundler for GET: /webhook
+// fiber reqest handler for GET: /webhook
 func FacebookGet(c *fiber.Ctx) error {
 	// Your verify token. Should be a random string.
 	verifyToken := os.Getenv("FACEBOOK_PAGE_ACCESS_TOKEN")
@@ -40,7 +41,7 @@ func FacebookGet(c *fiber.Ctx) error {
 	return c.SendStatus(fiber.StatusForbidden)
 }
 
-// fiber reqest hundler for POST: /webhook
+// fiber reqest handler for POST: /webhook
 func FacebookPost(c *fiber.Ctx) error {
 	var body facebook.FacebookWebhookBody
 	err := c.BodyParser(&body)
@@ -83,14 +84,14 @@ func FacebookPost(c *fiber.Ctx) error {
 // handle message come from facebook (text message)
 func handleMessage(sender_psid string, message facebook.Message) error {
 	// work with lower case from now one
-	messageLowerCase := strings.ToLower(message.Text)
+	messageLowerCase := strings.ToLower(strings.Trim(message.Text, " "))
 
-	// redirect to specific regex hundler
+	// redirect to specific regex handler
 
 	// yt -> ^(.yt) (.+)$
 	ytRegex := regexp.MustCompile("^(.yt) (.+)$")
 	if match := ytRegex.FindStringSubmatch(messageLowerCase); match != nil {
-		return yt.RegexHundlerMessage(match[1:])
+		return yt.RegexHundlerMessage(sender_psid, match[1:])
 	}
 
 	// wiki -> ^(.wiki)( |-)([a-z]{2}) (.+)$
@@ -112,11 +113,12 @@ func handleMessage(sender_psid string, message facebook.Message) error {
 	}
 
 	//default
-	return yt.RegexHundlerMessage([]string{
-		fmt.Sprintf(".yt %s", messageLowerCase),
-		".yt",
-		messageLowerCase,
-	})
+	return yt.RegexHundlerMessage(
+		sender_psid,
+		[]string{
+			".wiki-en",
+			messageLowerCase,
+		})
 }
 
 // handle attachment message come from facebook
@@ -127,7 +129,16 @@ func handlePostback(sender_psid string, postback facebook.PostBack) error {
 		response := facebook.ResponseMessage{
 			Text: "Hi, how can I help you?",
 		}
-		err := CallSendAPI(sender_psid, response)
+		err := facebookSender.CallSendAPI(sender_psid, response)
+		if err != nil {
+			return fmt.Errorf("handleMessage: %w", err)
+		}
+		return nil
+	case "Greeting":
+		response := facebook.ResponseMessage{
+			Text: "Hi, how can I help you?",
+		}
+		err := facebookSender.CallSendAPI(sender_psid, response)
 		if err != nil {
 			return fmt.Errorf("handleMessage: %w", err)
 		}
@@ -138,7 +149,7 @@ func handlePostback(sender_psid string, postback facebook.PostBack) error {
 		response := facebook.ResponseMessage{
 			Text: "for youtube",
 		}
-		err := CallSendAPI(sender_psid, response)
+		err := facebookSender.CallSendAPI(sender_psid, response)
 		if err != nil {
 			return fmt.Errorf("handleMessage: %w", err)
 		}
@@ -147,7 +158,7 @@ func handlePostback(sender_psid string, postback facebook.PostBack) error {
 		response := facebook.ResponseMessage{
 			Text: "for review",
 		}
-		err := CallSendAPI(sender_psid, response)
+		err := facebookSender.CallSendAPI(sender_psid, response)
 		if err != nil {
 			return fmt.Errorf("handleMessage: %w", err)
 		}
@@ -156,7 +167,7 @@ func handlePostback(sender_psid string, postback facebook.PostBack) error {
 		response := facebook.ResponseMessage{
 			Text: "for help",
 		}
-		err := CallSendAPI(sender_psid, response)
+		err := facebookSender.CallSendAPI(sender_psid, response)
 		if err != nil {
 			return fmt.Errorf("handleMessage: %w", err)
 		}
@@ -165,7 +176,7 @@ func handlePostback(sender_psid string, postback facebook.PostBack) error {
 		response := facebook.ResponseMessage{
 			Text: "for SUPPORT_US",
 		}
-		err := CallSendAPI(sender_psid, response)
+		err := facebookSender.CallSendAPI(sender_psid, response)
 		if err != nil {
 			return fmt.Errorf("handleMessage: %w", err)
 		}
@@ -178,14 +189,14 @@ func handlePostback(sender_psid string, postback facebook.PostBack) error {
 				Is_reusable: false,
 			},
 		}
-		err := CallSendAPI(sender_psid, response)
+		err := facebookSender.CallSendAPI(sender_psid, response)
 		if err != nil {
 			return fmt.Errorf("handleMessage: %w", err)
 		}
 		return nil
 	}
 
-	// redirect to specific regex hundler
+	// redirect to specific regex handler
 
 	// yt -> ^(YT_::_)(.+)$
 	ytRegex := regexp.MustCompile("^(YT_::_)(.+)$")

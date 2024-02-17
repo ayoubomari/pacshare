@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/ayoubomari/pacshare/app/controllers/facebook"
+	"github.com/ayoubomari/pacshare/app/controllers/facebookSender"
 	facebookModel "github.com/ayoubomari/pacshare/app/models/facebook"
 )
 
@@ -14,7 +14,7 @@ func TestSendFacebookMessage(t *testing.T) {
 	response := facebookModel.ResponseMessage{
 		Text: "hi from the test",
 	}
-	err := facebook.CallSendAPI(sender_psid, response)
+	err := facebookSender.CallSendAPI(sender_psid, response)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -30,7 +30,7 @@ func TestSendFacebookMediaAttachment(t *testing.T) {
 			Is_reusable: false,
 		},
 	}
-	err := facebook.CallSendAPI(sender_psid, response)
+	err := facebookSender.CallSendAPI(sender_psid, response)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -59,7 +59,7 @@ func TestSendFacebookGeniricTamplateAttachment(t *testing.T) {
 			},
 		},
 	}
-	err := facebook.CallSendAPI(sender_psid, response)
+	err := facebookSender.CallSendAPI(sender_psid, response)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -82,7 +82,7 @@ func TestSendFacebookButtonTamplateAttachment(t *testing.T) {
 			},
 		},
 	}
-	err := facebook.CallSendAPI(sender_psid, response)
+	err := facebookSender.CallSendAPI(sender_psid, response)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -92,7 +92,7 @@ func TestSendFacebookButtonTamplateAttachment(t *testing.T) {
 func TestSendFacebookResponseAction(t *testing.T) {
 	sender_psid := "4345084215546247"
 	response := "TYPING_ON"
-	err := facebook.CallSendAPI(sender_psid, response)
+	err := facebookSender.CallSendAPI(sender_psid, response)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -101,7 +101,7 @@ func TestSendFacebookResponseAction(t *testing.T) {
 // test to get facebook message info
 func TestGetFacebookMessageInfo(t *testing.T) {
 	mid := "m_CnahzSvUI_YxZZhSiXZ0jpFs0JtiuDOO_WqFxoAp5dZbGnBcbn38q3qYSIRJxtA3JC9TnhK6Bdyig7BMuJDTww"
-	messageInfo, err := facebook.GetMessageInfo(mid)
+	messageInfo, err := facebookSender.GetMessageInfo(mid)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -111,7 +111,7 @@ func TestGetFacebookMessageInfo(t *testing.T) {
 // test to get facebook sender info
 func TestGetFacebookSenderInfo(t *testing.T) {
 	sender_psid := "4345084215546247"
-	senderInfo, err := facebook.GetSenderInfo(sender_psid)
+	senderInfo, err := facebookSender.GetSenderInfo(sender_psid)
 	if err != nil {
 		t.Fatal(err)
 	}
