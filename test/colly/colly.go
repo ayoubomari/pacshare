@@ -2,32 +2,28 @@ package main
 
 import (
 	"fmt"
-
-	"github.com/gocolly/colly/v2"
+	"strings"
 )
 
 func main() {
-	// Instantiate default collector
-	c := colly.NewCollector(
-		// Visit only domains: hackerspaces.org, wiki.hackerspaces.org
-		colly.AllowedDomains("hackerspaces.org", "wiki.hackerspaces.org"),
-	)
+	urls := []string{
+		"https://www.youtube.com/shorts/UUb68mu2G1M?hellno=wtf&ok=yes",
+		"https://www.youtube.com/watch?v=KNHEXOoV-H4&hellno=wtf&ok=yes",
+		"https://youtu.be/KNHEXOoV-H4?si=Jzqw82ONyOKk8i9e/hellno?wtf&ok",
+	}
 
-	// On every a element which has href attribute call callback
-	c.OnHTML("a[href]", func(e *colly.HTMLElement) {
-		link := e.Attr("href")
-		// Print link
-		fmt.Printf("Link found: %q -> %s\n", e.Text, link)
-		// Visit link found on page
-		// Only those links are visited which are in AllowedDomains
-		c.Visit(e.Request.AbsoluteURL(link))
-	})
-
-	// Before making a request print "Visiting ..."
-	c.OnRequest(func(r *colly.Request) {
-		fmt.Println("Visiting", r.URL.String())
-	})
-
-	// Start scraping on https://hackerspaces.org
-	c.Visit("https://hackerspaces.org/")
+	for _, url := range urls {
+		var videoID string
+		if strings.Contains(url, "watch?v=") {
+			url2 := strings.ReplaceAll(url, "&", "watch?v=")
+			videoID = strings.Split(url2, "watch?v=")[1]
+		} else if strings.Contains(url, "youtu.be/") {
+			videoID = strings.Split(url, "youtu.be/")[1]
+			videoID = strings.Split(videoID, "?")[0]
+		} else if strings.Contains(url, "shorts/") {
+			videoID = strings.Split(url, "shorts/")[1]
+			videoID = strings.Split(videoID, "?")[0]
+		}
+		fmt.Println("videoID:", videoID)
+	}
 }

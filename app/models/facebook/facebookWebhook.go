@@ -33,6 +33,7 @@ type Message struct {
 	Text        string            `json:"text,omitempty"`
 	Attachments []MediaAttachment `json:"attachments,omitempty"`
 	Reply_to    MID               `json:"reply_to,omitempty"`
+	Quick_reply Quick_reply       `json:"quick_reply,omitempty"`
 }
 type MID struct {
 	MID string `json:"mid"`
@@ -58,5 +59,9 @@ type WebhookBodyAttachmentCoordinates struct {
 
 type PostBack struct {
 	Title   string `json:"title"`
+	Payload string `json:"payload"`
+}
+
+type Quick_reply struct {
 	Payload string `json:"payload"`
 }

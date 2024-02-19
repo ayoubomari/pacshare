@@ -58,13 +58,19 @@ func FacebookPost(c *fiber.Ctx) error {
 			// Get the sender PSID
 			sender_psid := webHookEvent.Sender.ID
 
-			if webHookEvent.Message.MID != "" {
+			if webHookEvent.Message.MID != "" && webHookEvent.Message.Quick_reply.Payload != "" { // handle quick replay
+				err := handleQuickReplay(sender_psid, webHookEvent.Message)
+				if err != nil {
+					fmt.Println(err)
+					return nil
+				}
+			} else if webHookEvent.Message.MID != "" { // handle message
 				err := handleMessage(sender_psid, webHookEvent.Message)
 				if err != nil {
 					fmt.Println(err)
 					return nil
 				}
-			} else if webHookEvent.PostBack.Title != "" {
+			} else if webHookEvent.PostBack.Title != "" { // handle postback
 				err := handlePostback(sender_psid, webHookEvent.PostBack)
 				if err != nil {
 					fmt.Println(err)
@@ -81,34 +87,39 @@ func FacebookPost(c *fiber.Ctx) error {
 	return c.SendStatus(fiber.StatusForbidden)
 }
 
+// handle quick replay message
+func handleQuickReplay(sender_psid string, message facebook.Message) error {
+	return nil
+}
+
 // handle message come from facebook (text message)
 func handleMessage(sender_psid string, message facebook.Message) error {
 	// work with lower case from now one
-	messageLowerCase := strings.ToLower(strings.Trim(message.Text, " "))
+	trimmedMessage := strings.Trim(message.Text, " ")
 
 	// redirect to specific regex handler
 
 	// yt -> ^(.yt) (.+)$
 	ytRegex := regexp.MustCompile("^(.yt) (.+)$")
-	if match := ytRegex.FindStringSubmatch(messageLowerCase); match != nil {
+	if match := ytRegex.FindStringSubmatch(trimmedMessage); match != nil {
 		return yt.RegexHundlerMessage(sender_psid, match[1:])
 	}
 
 	// wiki -> ^(.wiki)( |-)([a-z]{2}) (.+)$
 	wikiRegex := regexp.MustCompile("^(.wiki)( |-)([a-z]{2}) (.+)$")
-	if match := wikiRegex.FindStringSubmatch(messageLowerCase); match != nil {
+	if match := wikiRegex.FindStringSubmatch(trimmedMessage); match != nil {
 		return wiki.RegexHundlerMessage(match[1:])
 	}
 
 	// apk -> ^(.apk) (.+)$
 	apkRegex := regexp.MustCompile("^(.apk) (.+)$")
-	if match := apkRegex.FindStringSubmatch(messageLowerCase); match != nil {
+	if match := apkRegex.FindStringSubmatch(trimmedMessage); match != nil {
 		return apk.RegexHundlerMessage(match[1:])
 	}
 
 	// pdf -> ^(.pdf) (.+)$
 	pdfRegex := regexp.MustCompile("^(.pdf) (.+)$")
-	if match := pdfRegex.FindStringSubmatch(messageLowerCase); match != nil {
+	if match := pdfRegex.FindStringSubmatch(trimmedMessage); match != nil {
 		return pdf.RegexHundlerMessage(match[1:])
 	}
 
@@ -117,8 +128,9 @@ func handleMessage(sender_psid string, message facebook.Message) error {
 		sender_psid,
 		[]string{
 			".wiki-en",
-			messageLowerCase,
-		})
+			trimmedMessage,
+		},
+	)
 }
 
 // handle attachment message come from facebook
@@ -201,7 +213,7 @@ func handlePostback(sender_psid string, postback facebook.PostBack) error {
 	// yt -> ^(YT_::_)(.+)$
 	ytRegex := regexp.MustCompile("^(YT_::_)(.+)$")
 	if match := ytRegex.FindStringSubmatch(postback.Payload); match != nil {
-		return yt.RegexHundlerPostback(match[1:])
+		return yt.RegexHundlerPostback(sender_psid, match[1:])
 	}
 
 	// wiki -> ^(WIKI_::_)(.+)$

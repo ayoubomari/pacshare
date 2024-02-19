@@ -98,6 +98,32 @@ func TestSendFacebookResponseAction(t *testing.T) {
 	}
 }
 
+// test seding quick replay message
+func TestSendFacebookQuickReplay(t *testing.T) {
+	sender_psid := "4345084215546247"
+	response := facebookModel.QuickReplyMessage{
+		Text: "title",
+		QuickReplies: []facebookModel.QuickReplyResponse{
+			{
+				ContentType: "text",
+				Title:       "pac1",
+				Payload:     "PAYLOAD",
+				ImageURL:    "https://static.wikia.nocookie.net/pacman/images/2/24/Pac-Man-0.png/revision/latest?cb=20190526005949",
+			},
+			{
+				ContentType: "text",
+				Title:       "pac2",
+				Payload:     "PAYLOAD",
+				ImageURL:    "https://static.wikia.nocookie.net/pacman/images/2/24/Pac-Man-0.png/revision/latest?cb=20190526005949",
+			},
+		},
+	}
+	err := facebookSender.CallSendAPI(sender_psid, response)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
 // test to get facebook message info
 func TestGetFacebookMessageInfo(t *testing.T) {
 	mid := "m_CnahzSvUI_YxZZhSiXZ0jpFs0JtiuDOO_WqFxoAp5dZbGnBcbn38q3qYSIRJxtA3JC9TnhK6Bdyig7BMuJDTww"

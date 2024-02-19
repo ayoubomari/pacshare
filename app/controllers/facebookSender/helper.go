@@ -92,6 +92,20 @@ func CallSendAPI(sender_psid string, response interface{}) error {
 		if err != nil {
 			return fmt.Errorf("CallSendAPI: %w", err)
 		}
+	} else if responseQuickReplay, ok := response.(facebook.QuickReplyMessage); ok {
+		requestBody := facebook.ResponseWithQuickReplay{
+			Recipient: facebook.ResponseRecipient{ID: sender_psid},
+			Message:   responseQuickReplay,
+		}
+		bodyJsonBytes, err := json.Marshal(requestBody)
+		if err != nil {
+			return fmt.Errorf("CallSendAPI: %w", err)
+		}
+
+		err = facebookSendRequest(sender_psid, bodyJsonBytes)
+		if err != nil {
+			return fmt.Errorf("CallSendAPI: %w", err)
+		}
 	} else if responseResponseAction, ok := response.(string); ok {
 		requestBody := facebook.ResponseWithResponseAction{
 			Recipient:     facebook.ResponseRecipient{ID: sender_psid},
@@ -113,14 +127,14 @@ func CallSendAPI(sender_psid string, response interface{}) error {
 }
 
 // Sends response messages via the Send API, with a callbach functions
-func CallSendAPIWithCallback(sender_psid string, response interface{}, cb func() error) error {
+func CallSendAPIWithCallback(sender_psid string, response interface{}, cb func(err error) error) error {
 	err := CallSendAPI(sender_psid, response)
 	if err != nil {
-		cb()
+		cb(err)
 		return fmt.Errorf("CallSendAPIWithCallback: %w", err)
 	}
 
-	err = cb()
+	err = cb(nil)
 	if err != nil {
 		return fmt.Errorf("CallSendAPIWithCallback => cb: %w", err)
 	}

@@ -25,6 +25,12 @@ type ResponseWithResponseAction struct {
 	Sender_action string `json:"sender_action"`
 }
 
+// facebook quick replay as a response
+type ResponseWithQuickReplay struct {
+	Recipient ResponseRecipient `json:"recipient"`
+	Message   QuickReplyMessage `json:"message"`
+}
+
 // id: sender_id string
 type ResponseRecipient struct {
 	ID string `json:"id"`

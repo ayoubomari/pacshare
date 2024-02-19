@@ -6,9 +6,9 @@ import (
 	"io"
 
 	"github.com/ayoubomari/pacshare/app/controllers/facebookSender"
-	facebookModel "github.com/ayoubomari/pacshare/app/models/facebook"
+	"github.com/ayoubomari/pacshare/app/models/facebook"
 	"github.com/ayoubomari/pacshare/config"
-	"github.com/ayoubomari/pacshare/util/format"
+	"github.com/ayoubomari/pacshare/util/formats"
 	"github.com/ayoubomari/pacshare/util/request"
 )
 
@@ -60,15 +60,21 @@ func scrapeYt(sender_psid string, searchKeyWords string) error {
 	}
 	var bodyJson scrapeYtResponseBody
 	err = json.Unmarshal(bodyBytes, &bodyJson)
-	fmt.Printf("bodyJson: %+v\n", bodyJson.Contents.TwoColumnSearchResultsRenderer.PrimaryContents.SectionListRenderer.Contents)
 	if err != nil {
 		return fmt.Errorf("scrapeYt: failt to unmarshale the body %w", err)
 	}
 
+	if len(bodyJson.Contents.TwoColumnSearchResultsRenderer.PrimaryContents.SectionListRenderer.Contents)-2 < 0 {
+		response := facebook.ResponseMessage{
+			Text: "No result found. 🔭\n" +
+				"Try different keywords.",
+		}
+		go facebookSender.CallSendAPI(sender_psid, response)
+		return nil
+	}
 	things := bodyJson.Contents.TwoColumnSearchResultsRenderer.PrimaryContents.SectionListRenderer.Contents[len(bodyJson.Contents.TwoColumnSearchResultsRenderer.PrimaryContents.SectionListRenderer.Contents)-2].ItemSectionRenderer.Contents
-	fmt.Println("len(things):", len(things))
 	if things == nil || len(things) <= 1 {
-		response := facebookModel.ResponseMessage{
+		response := facebook.ResponseMessage{
 			Text: "No result found. 🔭\n" +
 				"Try different keywords.",
 		}
@@ -80,11 +86,7 @@ func scrapeYt(sender_psid string, searchKeyWords string) error {
 	n := config.MaxReturnedVideo
 	for i := 0; i < len(things); i++ {
 		if things[i].VideoRenderer.VideoID != "" {
-			durationInSeconds := format.DurationStrToSeconds(things[i].VideoRenderer.LengthText.SimpleText)
-			fmt.Println("simple duration text:", things[i].VideoRenderer.LengthText.SimpleText)
-			fmt.Println("durationInSeconds: ", durationInSeconds)
-			fmt.Println("title: ", things[i].VideoRenderer.Title.Runs[0].Text)
-
+			durationInSeconds := formats.DurationStrToSeconds(things[i].VideoRenderer.LengthText.SimpleText)
 			if durationInSeconds <= config.MaxDurationInSeconds && durationInSeconds > 0 {
 				n--
 				comul++
@@ -92,16 +94,16 @@ func scrapeYt(sender_psid string, searchKeyWords string) error {
 					break
 				}
 
-				response := facebookModel.ResponseTemplateAttachment{
+				response := facebook.ResponseTemplateAttachment{
 					Type: "template",
-					Payload: facebookModel.TemplateAttachmentPayload{
+					Payload: facebook.TemplateAttachmentPayload{
 						TemplateType: "generic",
-						Elements: []facebookModel.TemplateAttachmentElement{
+						Elements: []facebook.TemplateAttachmentElement{
 							{
 								Title:    fmt.Sprintf("%d# %s", comul, things[i].VideoRenderer.Title.Runs[0].Text),
 								Subtitle: things[i].VideoRenderer.LengthText.SimpleText,
 								ImageURL: fmt.Sprintf("https://img.youtube.com/vi/%s/0.jpg", things[i].VideoRenderer.VideoID),
-								Buttons: []facebookModel.TemplateAttachmentButton{
+								Buttons: []facebook.TemplateAttachmentButton{
 									{
 										Type:    "postback",
 										Title:   "Watch now",
@@ -128,7 +130,7 @@ func scrapeYt(sender_psid string, searchKeyWords string) error {
 		}
 	}
 	if comul == 0 {
-		response := facebookModel.ResponseMessage{
+		response := facebook.ResponseMessage{
 			Text: "All these videos are long 😥.\n" +
 				"Try different keywords.",
 		}

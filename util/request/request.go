@@ -23,7 +23,7 @@ func JSONRequestWithQuery(method string, url string, jsonBytes []byte, headers m
 
 	req, err := http.NewRequest(method, fullURL, bytes.NewBuffer(jsonBytes))
 	if err != nil {
-		return nil, fmt.Errorf("Error creating request: %v", err)
+		return nil, fmt.Errorf("error creating request: %v", err)
 	}
 
 	// Set the Content-Type header to application/json
@@ -36,7 +36,7 @@ func JSONRequestWithQuery(method string, url string, jsonBytes []byte, headers m
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("Error making request: %v", err)
+		return nil, fmt.Errorf("error making request: %v", err)
 	}
 
 	return resp, nil
@@ -47,7 +47,7 @@ func JSONRequestWithQuery(method string, url string, jsonBytes []byte, headers m
 func JSONReqest(method string, url string, jsonBytes []byte, headers map[string]string) (*http.Response, error) {
 	req, err := http.NewRequest(method, url, bytes.NewBuffer(jsonBytes))
 	if err != nil {
-		return nil, fmt.Errorf("Error creating request: %v", err)
+		return nil, fmt.Errorf("error creating request: %v", err)
 	}
 
 	// Set the Content-Type header to application/json
@@ -60,8 +60,20 @@ func JSONReqest(method string, url string, jsonBytes []byte, headers map[string]
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("Error making request: %v", err)
+		return nil, fmt.Errorf("error making request: %v", err)
 	}
 
 	return resp, nil
+}
+
+// get a file size from the response header (ContentLength)
+func GetContentLengthFromResponseHeader(url string) (int, error) {
+	client := &http.Client{}
+	// Get the size of the file to download
+	resp, err := client.Head(url)
+	if err != nil {
+		return 0, err
+	}
+	defer resp.Body.Close()
+	return int(resp.ContentLength), nil
 }
