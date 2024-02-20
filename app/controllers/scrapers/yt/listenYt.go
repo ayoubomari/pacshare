@@ -7,7 +7,7 @@ import (
 	"github.com/ayoubomari/pacshare/app/controllers/facebookSender"
 	"github.com/ayoubomari/pacshare/app/models/facebook"
 	"github.com/ayoubomari/pacshare/config"
-	filedownloader "github.com/ayoubomari/pacshare/util/fileDownloader"
+	"github.com/ayoubomari/pacshare/util/fileDownloader"
 	"github.com/ayoubomari/pacshare/util/formats"
 	"github.com/ayoubomari/pacshare/util/request"
 )
@@ -22,7 +22,13 @@ func listenYt(sender_psid string, arguments []string) error {
 
 	// get audio url .mp3
 	videoFormatsAndDetails, err := getVideoFormatsUrls(arguments[0])
-	if err != nil {
+	if errors.Is(err, ErrVideoWayWasDeleted) {
+		response := facebook.ResponseMessage{
+			Text: "The video may have been removed from YouTube.",
+		}
+		go facebookSender.CallSendAPI(sender_psid, response)
+		return nil
+	} else if err != nil {
 		return fmt.Errorf("listenYt: could not get the audio formats: %w", err)
 	}
 	audioUrl := videoFormatsAndDetails.FormatsUrls[1]
@@ -34,7 +40,7 @@ func listenYt(sender_psid string, arguments []string) error {
 	}
 
 	// call DownloadFileByRangeWithCallBack to download the file and send It and delete It.
-	err = filedownloader.DownloadFileByRangeWithCallBack(sender_psid, audioUrl, "./public/src/audios/", formats.ToFileNameString(videoFormatsAndDetails.Title), "_pac.mp4", fileSize, config.AudioChunksMaxSize, "file")
+	err = fileDownloader.DownloadFileByRangeWithCallBack(sender_psid, audioUrl, "./public/src/audios/", formats.ToFileNameString(videoFormatsAndDetails.Title), "_pac.mp4", fileSize, config.AudioChunksMaxSize, "file")
 	if err != nil {
 		return fmt.Errorf("listenYt: couldn't download file by chunks: %w", err)
 	}

@@ -2,12 +2,15 @@ package yt
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 
 	"github.com/ayoubomari/pacshare/config"
 	"github.com/ayoubomari/pacshare/util/request"
 )
+
+var ErrVideoWayWasDeleted = errors.New("the video may have been removed from YouTube")
 
 // the return type of getVideoFormatsUrls
 // string title
@@ -51,6 +54,9 @@ func getVideoFormatsUrls(videoID string) (VideoFormatsUrlsAndDetails, error) {
 	err = json.Unmarshal(bodyBytes, &bodyJson)
 	if err != nil {
 		return videoFormatsUrlsAndDetails, fmt.Errorf("VetvideoFormatsUrls: failt to unmarshale the body %w", err)
+	}
+	if bodyJson.FormatStreams == nil || bodyJson.FormatStreams[0].Url == "" || bodyJson.AdaptiveFormats == nil || bodyJson.AdaptiveFormats[0].Url == "" {
+		return videoFormatsUrlsAndDetails, ErrVideoWayWasDeleted
 	}
 
 	videoFormatsUrlsAndDetails.Title = bodyJson.Title

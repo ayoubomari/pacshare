@@ -32,7 +32,7 @@ func scrapeYtByVideoUrl(sender_psid string, url string) error {
 	videoDetails, err := getVideoDetails(videoID)
 	if err != nil && errors.Is(err, ErrVideoDetailsIsNil) {
 		response := facebook.ResponseMessage{
-			Text: "Anvalide Url 💔.",
+			Text: "Anvalide Youtube Url 💔.",
 		}
 		facebookSender.CallSendAPI(sender_psid, response)
 		return nil
