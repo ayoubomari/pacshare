@@ -41,6 +41,7 @@ type MID struct {
 
 // this can be use to send and recieve media message such as (image, audio, file, location...)
 type MediaAttachment struct {
+	// Text | Image | Audio | Video | File | Location | Sticker | Template | Quick | Buttons | List | Generic | Receipt
 	Type    string                       `json:"type"`
 	Payload WebhookBodyAttachmentPayload `json:"payload"`
 }

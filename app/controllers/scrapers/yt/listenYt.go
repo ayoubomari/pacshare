@@ -26,7 +26,7 @@ func listenYt(sender_psid string, arguments []string) error {
 		response := facebook.ResponseMessage{
 			Text: "The video may have been removed from YouTube.",
 		}
-		go facebookSender.CallSendAPI(sender_psid, response)
+		facebookSender.CallSendAPI(sender_psid, response)
 		return nil
 	} else if err != nil {
 		return fmt.Errorf("listenYt: could not get the audio formats: %w", err)
@@ -45,6 +45,7 @@ func listenYt(sender_psid string, arguments []string) error {
 		return fmt.Errorf("listenYt: couldn't download file by chunks: %w", err)
 	}
 
+	// send recommended videos button
 	response := facebook.ResponseTemplateAttachment{
 		Type: "template",
 		Payload: facebook.TemplateAttachmentPayload{
@@ -59,7 +60,7 @@ func listenYt(sender_psid string, arguments []string) error {
 			},
 		},
 	}
-	go facebookSender.CallSendAPI(sender_psid, response)
+	facebookSender.CallSendAPI(sender_psid, response)
 
 	return nil
 }

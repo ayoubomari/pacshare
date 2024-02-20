@@ -68,7 +68,7 @@ func getVideoDetails(videoID string) (VideoDetails, error) {
 		return videoDetails, fmt.Errorf("getVideoDetails: failt to unmarshale the body %w", err)
 	}
 
-	if bodyJson.VideoDetails == nil {
+	if bodyJson.VideoDetails == nil || bodyJson.Microformat == nil {
 		return videoDetails, ErrVideoDetailsIsNil
 	}
 

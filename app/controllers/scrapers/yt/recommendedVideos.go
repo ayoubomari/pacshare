@@ -22,7 +22,7 @@ type recommendedVideosResponseBody struct {
 	} `json:"recommendedVideos"`
 }
 
-func RecommendedVideos(sender_psid string, arguments []string) error {
+func recommendedVideos(sender_psid string, arguments []string) error {
 	if len(arguments) < 1 {
 		return errors.New("arguments length is lower then 1")
 	}
@@ -103,7 +103,7 @@ func RecommendedVideos(sender_psid string, arguments []string) error {
 			Text: "All these videos are long 😥.\n" +
 				"Try different keywords.",
 		}
-		go facebookSender.CallSendAPI(sender_psid, response)
+		facebookSender.CallSendAPI(sender_psid, response)
 	}
 	return nil
 }

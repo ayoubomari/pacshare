@@ -69,7 +69,7 @@ func scrapeYt(sender_psid string, searchKeyWords string) error {
 			Text: "No result found. 🔭\n" +
 				"Try different keywords.",
 		}
-		go facebookSender.CallSendAPI(sender_psid, response)
+		facebookSender.CallSendAPI(sender_psid, response)
 		return nil
 	}
 	things := bodyJson.Contents.TwoColumnSearchResultsRenderer.PrimaryContents.SectionListRenderer.Contents[len(bodyJson.Contents.TwoColumnSearchResultsRenderer.PrimaryContents.SectionListRenderer.Contents)-2].ItemSectionRenderer.Contents
@@ -78,7 +78,7 @@ func scrapeYt(sender_psid string, searchKeyWords string) error {
 			Text: "No result found. 🔭\n" +
 				"Try different keywords.",
 		}
-		go facebookSender.CallSendAPI(sender_psid, response)
+		facebookSender.CallSendAPI(sender_psid, response)
 		return nil
 	}
 
@@ -134,7 +134,7 @@ func scrapeYt(sender_psid string, searchKeyWords string) error {
 			Text: "All these videos are long 😥.\n" +
 				"Try different keywords.",
 		}
-		go facebookSender.CallSendAPI(sender_psid, response)
+		facebookSender.CallSendAPI(sender_psid, response)
 	}
 
 	return nil
