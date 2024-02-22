@@ -6,7 +6,6 @@ import (
 
 	"github.com/ayoubomari/pacshare/app/controllers/facebookSender"
 	"github.com/ayoubomari/pacshare/app/models/facebook"
-	"github.com/ayoubomari/pacshare/config"
 	"github.com/ayoubomari/pacshare/util/formats"
 )
 
@@ -39,27 +38,8 @@ func VideoDescription(sender_psid string, arguments []string) error {
 	}
 	facebookSender.CallSendAPI(sender_psid, reponse)
 
-	// send description box
-	totalMessages := len(videoDetails.Description) / config.MaxMessageLength
-	if len(videoDetails.Description)%config.MaxMessageLength > 0 {
-		totalMessages += 1
-	}
-	fmt.Println("len(videoDetails.Description):", len(videoDetails.Description))
-	for i := 0; i < totalMessages; i++ {
-		start := i * config.MaxMessageLength
-		var end int
-		if i == totalMessages-1 {
-			end = len(videoDetails.Description)
-		} else {
-			end = i * config.MaxMessageLength
-		}
-		fmt.Println("start:", start)
-		fmt.Println("end:", end)
-		DescriptionResponse := facebook.ResponseMessage{
-			Text: videoDetails.Description[start:end],
-		}
-		go facebookSender.CallSendAPI(sender_psid, DescriptionResponse)
-	}
+	// send description box by chunks
+	facebookSender.SendMessageByChunks(sender_psid, videoDetails.Description)
 
 	return nil
 }

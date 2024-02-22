@@ -26,7 +26,7 @@ func TestSendFacebookMediaAttachment(t *testing.T) {
 	response := facebookModel.ResponseMediaAttachment{
 		Type: "video",
 		Payload: facebookModel.WebhookBodyAttachmentPayload{
-			URL:         "pacshare.omzor.com/src/videos/woody.mp4",
+			URL:         "pacshare.omzor.com/static_src/videos/woody.mp4",
 			Is_reusable: false,
 		},
 	}
@@ -91,8 +91,7 @@ func TestSendFacebookButtonTamplateAttachment(t *testing.T) {
 // test seding response action like TYPING_ON
 func TestSendFacebookResponseAction(t *testing.T) {
 	sender_psid := "4345084215546247"
-	response := "TYPING_ON"
-	err := facebookSender.CallSendAPI(sender_psid, response)
+	err := facebookSender.SendTypingOn(sender_psid)
 	if err != nil {
 		t.Fatal(err)
 	}

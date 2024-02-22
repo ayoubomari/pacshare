@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// yt -> (?i)^(.yt) (.+)$
 func RegexHundlerMessage(sender_psid string, subStrings []string) error {
 	if len(subStrings) < 2 {
 		return errors.New("subStrings length are low then 2")

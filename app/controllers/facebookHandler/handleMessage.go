@@ -27,7 +27,7 @@ func handleMessage(sender_psid string, message facebook.Message) error {
 	// wiki -> (?i)^(.wiki)( |-)([a-z]{2}) (.+)$
 	wikiRegex := regexp.MustCompile("(?i)^(.wiki)( |-)([a-z]{2}) (.+)$")
 	if match := wikiRegex.FindStringSubmatch(trimmedMessage); match != nil {
-		return wiki.RegexHundlerMessage(match[1:])
+		return wiki.RegexHundlerMessage(sender_psid, match[1:])
 	}
 
 	// apk -> (?i)^(.apk) (.+)$
@@ -43,10 +43,12 @@ func handleMessage(sender_psid string, message facebook.Message) error {
 	}
 
 	//default
-	return yt.RegexHundlerMessage(
+	return wiki.RegexHundlerMessage(
 		sender_psid,
 		[]string{
-			".yt",
+			".wiki",
+			"-",
+			"en",
 			trimmedMessage,
 		},
 	)

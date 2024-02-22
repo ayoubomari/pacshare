@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/ayoubomari/pacshare/app/controllers/facebookSender"
 	"github.com/ayoubomari/pacshare/app/models/facebook"
 	"github.com/gofiber/fiber/v2"
 )
@@ -49,6 +50,9 @@ func FacebookPost(c *fiber.Ctx) error {
 
 			// Get the sender PSID
 			sender_psid := webHookEvent.Sender.ID
+
+			// send type on action
+			go facebookSender.SendTypingOn(sender_psid)
 
 			if webHookEvent.Message.MID != "" && webHookEvent.Message.Quick_reply.Payload != "" { // handle quick replay
 				err := handleQuickReplay(sender_psid, webHookEvent.Message)

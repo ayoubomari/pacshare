@@ -39,7 +39,7 @@ func getVideoFormatsUrls(videoID string) (VideoFormatsUrlsAndDetails, error) {
 		"GET",
 		fmt.Sprintf("%s/api/v1/videos/%s?fields=formatStreams,adaptiveFormats,title", config.InvidiousEndpoint, videoID),
 		nil,
-		make(map[string]string),
+		nil,
 	)
 	if err != nil {
 		return videoFormatsUrlsAndDetails, fmt.Errorf("VetvideoFormatsUrls: json requeset err: %w", err)

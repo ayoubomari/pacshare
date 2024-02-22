@@ -51,7 +51,7 @@ func getVideoDetails(videoID string) (VideoDetails, error) {
 		"POST",
 		"https://www.youtube.com/youtubei/v1/player?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8&prettyPrint=false",
 		jsonBytes,
-		make(map[string]string),
+		nil,
 	)
 	if err != nil {
 		return videoDetails, fmt.Errorf("getVideoDetails: json requeset err: %w", err)

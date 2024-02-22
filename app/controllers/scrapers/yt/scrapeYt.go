@@ -47,7 +47,7 @@ func scrapeYt(sender_psid string, searchKeyWords string) error {
 		"POST",
 		"https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8&prettyPrint=false",
 		jsonBytes,
-		make(map[string]string),
+		nil,
 	)
 	if err != nil {
 		return fmt.Errorf("scrapeYt: json requeset err: %w", err)

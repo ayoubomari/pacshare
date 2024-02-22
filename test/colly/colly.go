@@ -3,27 +3,40 @@ package main
 import (
 	"fmt"
 	"strings"
+
+	"github.com/PuerkitoBio/goquery"
 )
 
 func main() {
-	urls := []string{
-		"https://www.youtube.com/shorts/UUb68mu2G1M?hellno=wtf&ok=yes",
-		"https://www.youtube.com/watch?v=KNHEXOoV-H4&hellno=wtf&ok=yes",
-		"https://youtu.be/KNHEXOoV-H4?si=Jzqw82ONyOKk8i9e/hellno?wtf&ok",
+	// Your HTML string
+	htmlString := `
+		<html>
+			<head>
+				<title>Sample HTML</title>
+			</head>
+			<body>
+				<div class="content">
+					<p>Hello, goquery!</p>
+				</div>
+			</body>
+		</html>
+	`
+
+	// Create a new reader for the HTML string
+	reader := strings.NewReader(htmlString)
+
+	// Use goquery to parse the HTML
+	doc, err := goquery.NewDocumentFromReader(reader)
+	if err != nil {
+		fmt.Println("Error parsing HTML:", err)
+		return
 	}
 
-	for _, url := range urls {
-		var videoID string
-		if strings.Contains(url, "watch?v=") {
-			url2 := strings.ReplaceAll(url, "&", "watch?v=")
-			videoID = strings.Split(url2, "watch?v=")[1]
-		} else if strings.Contains(url, "youtu.be/") {
-			videoID = strings.Split(url, "youtu.be/")[1]
-			videoID = strings.Split(videoID, "?")[0]
-		} else if strings.Contains(url, "shorts/") {
-			videoID = strings.Split(url, "shorts/")[1]
-			videoID = strings.Split(videoID, "?")[0]
-		}
-		fmt.Println("videoID:", videoID)
-	}
+	// Example: Accessing and printing the text inside the <p> tag
+	paragraphText := doc.Find("p").Text()
+	fmt.Println("Text inside <p> tag:", paragraphText)
+
+	// Example: Accessing and printing the text inside the .content class
+	contentText := doc.Find(".content").Text()
+	fmt.Println("Text inside .content class:", contentText)
 }
