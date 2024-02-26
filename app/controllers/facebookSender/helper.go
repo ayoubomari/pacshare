@@ -150,10 +150,7 @@ func CallSendAPIWithCallback(sender_psid string, response interface{}, cb func(e
 
 // Send Message by chunks (by the max size of a facebook message)
 func SendMessageByChunks(sender_psid string, message string) error {
-	totalMessages := len(message) / config.MaxMessageLength
-	if len(message)%config.MaxMessageLength > 0 {
-		totalMessages += 1
-	}
+	totalMessages := (len(message) + config.MaxMessageLength - 1) / config.MaxMessageLength
 	fmt.Println("totalMessages:", totalMessages)
 	for i := 0; i < totalMessages; i++ {
 		fmt.Println("i:", i)

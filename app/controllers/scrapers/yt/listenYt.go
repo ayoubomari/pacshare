@@ -39,8 +39,8 @@ func listenYt(sender_psid string, arguments []string) error {
 		return fmt.Errorf("listenYt: couldn't get the content size: %w", err)
 	}
 
-	// call DownloadFileByRangeWithCallBack to download the file and send It and delete It.
-	err = fileDownloader.DownloadFileByRangeWithCallBack(sender_psid, audioUrl, "./public/src/audios/", formats.ToFileNameString(videoFormatsAndDetails.Title), "_pac.mp4", fileSize, config.AudioChunksMaxSize, "file")
+	// call DownloadAndSendFileByRange to download the file and send It and delete It.
+	err = fileDownloader.DownloadAndSendFileByRange(sender_psid, audioUrl, "./public/src/audios/", formats.ToFileNameString(videoFormatsAndDetails.Title), "_pac.mp4", fileSize, config.AudioChunksMaxSize, "file")
 	if err != nil {
 		return fmt.Errorf("listenYt: couldn't download file by chunks: %w", err)
 	}

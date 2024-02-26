@@ -114,7 +114,7 @@ func handlePostback(sender_psid string, postback facebook.PostBack) error {
 	// apk -> ^(APK_::_)(.+)$
 	apkRegex := regexp.MustCompile("^(APK_::_)(.+)$")
 	if match := apkRegex.FindStringSubmatch(postback.Payload); match != nil {
-		return apk.RegexHundlerPostback(match[1:])
+		return apk.RegexHundlerPostback(sender_psid, match[1:])
 	}
 
 	// pdf -> ^(PDF_::_)(.+)$

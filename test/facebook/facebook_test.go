@@ -24,9 +24,9 @@ func TestSendFacebookMessage(t *testing.T) {
 func TestSendFacebookMediaAttachment(t *testing.T) {
 	sender_psid := "4345084215546247"
 	response := facebookModel.ResponseMediaAttachment{
-		Type: "video",
+		Type: "file",
 		Payload: facebookModel.WebhookBodyAttachmentPayload{
-			URL:         "pacshare.omzor.com/static_src/videos/woody.mp4",
+			URL:         "pacshare.omzor.com/src/apks/facebook.apk",
 			Is_reusable: false,
 		},
 	}

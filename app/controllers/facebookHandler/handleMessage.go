@@ -33,7 +33,7 @@ func handleMessage(sender_psid string, message facebook.Message) error {
 	// apk -> (?i)^(.apk) (.+)$
 	apkRegex := regexp.MustCompile("(?i)^(.apk) (.+)$")
 	if match := apkRegex.FindStringSubmatch(trimmedMessage); match != nil {
-		return apk.RegexHundlerMessage(match[1:])
+		return apk.RegexHundlerMessage(sender_psid, match[1:])
 	}
 
 	// pdf -> (?i)^(.pdf) (.+)$

@@ -39,8 +39,8 @@ func watchYt(sender_psid string, arguments []string) error {
 		return fmt.Errorf("watchYt: couldn't get the content size: %w", err)
 	}
 
-	// call DownloadFileByRangeWithCallBack to download the file and send It and delete It.
-	err = fileDownloader.DownloadFileByRangeWithCallBack(sender_psid, videoUrl, "./public/src/videos/", formats.ToFileNameString(videoFormatsAndDetails.Title), "_pac.mp4", fileSize, config.VideoChunksMaxSize, "file")
+	// call DownloadAndSendFileByRange to download the file and send It and delete It.
+	err = fileDownloader.DownloadAndSendFileByRange(sender_psid, videoUrl, "./public/src/videos/", formats.ToFileNameString(videoFormatsAndDetails.Title), "_pac.mp4", fileSize, config.VideoChunksMaxSize, "file")
 	if err != nil {
 		return fmt.Errorf("watchYt: couldn't download file by chunks: %w", err)
 	}

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"strconv"
+	"strings"
 
 	"github.com/ayoubomari/pacshare/util/formats"
 	"github.com/ayoubomari/pacshare/util/request"
@@ -85,7 +86,7 @@ func getVideoDetails(videoID string) (VideoDetails, error) {
 		DurationInSeconds: durationInSeconds,
 		Description:       description,
 		Thumbnail:         fmt.Sprintf("https://img.youtube.com/vi/%s/0.jpg", videoID),
-		UploadDate:        bodyJson.Microformat.PlayerMicroformatRenderer.UploadDate,
+		UploadDate:        strings.Split(bodyJson.Microformat.PlayerMicroformatRenderer.UploadDate, "T")[0],
 		Author:            bodyJson.VideoDetails.Author,
 		ViewCount:         formats.FormatNumberWithCommas(int64(videoCount)),
 	}
