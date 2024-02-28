@@ -2,6 +2,7 @@ package apk
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/ayoubomari/pacshare/app/controllers/facebookSender"
 	"github.com/ayoubomari/pacshare/app/models/facebook"
@@ -18,7 +19,8 @@ func descriptionApk(sender_psid string, arguments []string) error {
 		response := facebook.ResponseMessage{
 			Text: "Something wrong try another time 🙁.",
 		}
-		return facebookSender.CallSendAPI(sender_psid, response)
+		facebookSender.CallSendAPI(sender_psid, response)
+		return fmt.Errorf("descriptionApk: %w", err)
 	}
 
 	// send description text

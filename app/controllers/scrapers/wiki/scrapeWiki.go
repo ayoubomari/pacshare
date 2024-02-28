@@ -52,16 +52,15 @@ func scrapeWiki(sender_psid string, arguments []string) error {
 
 	pagesTitles, err := getwikiPagesTitles(lang, userTitle)
 	if err != nil {
-		response := SomethingWasWrong
-		return facebookSender.CallSendAPI(sender_psid, response)
+		facebookSender.CallSendAPI(sender_psid, SomethingWasWrong)
+		return fmt.Errorf("scrapeWiki: %w", err)
 	}
 	fmt.Println("pagesTitles:", pagesTitles)
 
 	doc, text, err := getWikiArticleTextHtmlByPageTitle(lang, pagesTitles[0], true)
 	if err != nil {
-		fmt.Println(err)
-		response := SomethingWasWrong
-		return facebookSender.CallSendAPI(sender_psid, response)
+		facebookSender.CallSendAPI(sender_psid, SomethingWasWrong)
+		return fmt.Errorf("scrapeWiki: %w", err)
 	}
 
 	//send the article as chunks
@@ -71,8 +70,8 @@ func scrapeWiki(sender_psid string, arguments []string) error {
 	fileName := formats.ToFileNameString(userTitle) + "_" + fmt.Sprint(randomNumber) + ".1_1_pac.md"
 	err = fs.WriteFile(fmt.Sprintf("./public/src/wikis/%s", fileName), text)
 	if err != nil {
-		response := SomethingWasWrong
-		return facebookSender.CallSendAPI(sender_psid, response)
+		facebookSender.CallSendAPI(sender_psid, SomethingWasWrong)
+		return fmt.Errorf("scrapeWiki: %w", err)
 	}
 
 	response := facebook.ResponseMediaAttachment{
@@ -86,9 +85,8 @@ func scrapeWiki(sender_psid string, arguments []string) error {
 	})
 
 	// if the page and the content are exist
-	//send the article photos
+	// send the article photos
 	// Find all images within the element with class "thumb" and get the src attribute
-
 	// Replace digits followed by "px-" with "1080px-"
 	re2 := regexp.MustCompile("[0-9]{1,4}px-")
 	doc.Find(".thumb img").Each(func(i int, s *goquery.Selection) {

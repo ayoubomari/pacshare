@@ -23,7 +23,8 @@ func photoApk(sender_psid string, arguments []string) error {
 
 	appInfo, err := GetApkInfoWS2(apkId)
 	if err != nil {
-		return facebookSender.CallSendAPI(sender_psid, SomethingWasWrong)
+		facebookSender.CallSendAPI(sender_psid, SomethingWasWrong)
+		return fmt.Errorf("photoApk: %w", err)
 	}
 
 	res, err := request.JSONReqest(
@@ -33,17 +34,20 @@ func photoApk(sender_psid string, arguments []string) error {
 		nil,
 	)
 	if err != nil {
-		return facebookSender.CallSendAPI(sender_psid, SomethingWasWrong)
+		facebookSender.CallSendAPI(sender_psid, SomethingWasWrong)
+		return fmt.Errorf("photoApk: %w", err)
 	}
 	defer res.Body.Close()
 
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
-		return facebookSender.CallSendAPI(sender_psid, SomethingWasWrong)
+		facebookSender.CallSendAPI(sender_psid, SomethingWasWrong)
+		return fmt.Errorf("photoApk: %w", err)
 	}
 
 	fmt.Println("getting the html page...")
 	imgNum := 0
+	// send screenshots
 	doc.Find(".app-view__SlideBundlerContainer-sc-oiuh9w-2 img").Each(func(i int, s *goquery.Selection) {
 		src, exists := s.Attr("src")
 
@@ -62,7 +66,7 @@ func photoApk(sender_psid string, arguments []string) error {
 		}
 	})
 
-	// send screenshots
+	// if there is no screenshot found
 	if imgNum == 0 {
 		response := facebook.ResponseMessage{
 			Text: "No screenshots were found. 🤷‍♂️",

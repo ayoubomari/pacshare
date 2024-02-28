@@ -23,7 +23,8 @@ func photoPdf(sender_psid string, arguments []string) error {
 
 	pdfInfo, err := GetPdfInfo(pdfLink)
 	if err != nil {
-		return facebookSender.CallSendAPI(sender_psid, SomethingWasWrong)
+		facebookSender.CallSendAPI(sender_psid, SomethingWasWrong)
+		return fmt.Errorf("photoPdf: %w", err)
 	}
 	if pdfInfo.Cover == "" {
 		response := facebook.ResponseMessage{
@@ -32,10 +33,12 @@ func photoPdf(sender_psid string, arguments []string) error {
 		return facebookSender.CallSendAPI(sender_psid, response)
 	}
 
+	// download the image locale than send it, because facebook denied request from pdf Drive cdn.
 	coverPath := fmt.Sprintf("./public/src/images/%s_%d.%s", formats.ToFileNameString(pdfInfo.Name), rand.Intn(1000), formats.ToFileNameString(strings.Split(pdfInfo.Cover, ".")[3]))
 	err = fileDownloader.DownloadEtireFile(pdfInfo.Cover, coverPath)
 	if err != nil {
-		return facebookSender.CallSendAPI(sender_psid, SomethingWasWrong)
+		facebookSender.CallSendAPI(sender_psid, SomethingWasWrong)
+		return fmt.Errorf("photoPdf: %w", err)
 	}
 
 	response := facebook.ResponseMediaAttachment{
@@ -46,8 +49,7 @@ func photoPdf(sender_psid string, arguments []string) error {
 		},
 	}
 	facebookSender.CallSendAPI(sender_psid, response)
-
-	fs.DeleteFile(coverPath)
+	fs.DeleteFile(coverPath) // delete the image after sending
 
 	return nil
 }

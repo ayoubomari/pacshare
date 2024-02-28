@@ -60,7 +60,7 @@ func getVideoFormatsUrls(videoID string) (VideoFormatsUrlsAndDetails, error) {
 	}
 
 	videoFormatsUrlsAndDetails.Title = bodyJson.Title
-	videoFormatsUrlsAndDetails.FormatsUrls[0] = bodyJson.FormatStreams[0].Url
-	videoFormatsUrlsAndDetails.FormatsUrls[1] = bodyJson.AdaptiveFormats[0].Url
+	videoFormatsUrlsAndDetails.FormatsUrls[0] = bodyJson.FormatStreams[0].Url   // video/mp4
+	videoFormatsUrlsAndDetails.FormatsUrls[1] = bodyJson.AdaptiveFormats[0].Url // // audio/mp4
 	return videoFormatsUrlsAndDetails, nil
 }

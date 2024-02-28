@@ -19,7 +19,7 @@ func DownloadAndSendFileWithFiber(sender_psid string, mediaUrl string, outputPat
 	fileNamePattern := outputPath + fileName + "_" + fmt.Sprint(randomNumber) + "." + fmt.Sprint(numChunks) + "_" + "%d" + fileExtentions
 
 	filePath := fmt.Sprintf(fileNamePattern, 0)
-	err := DownloadEtireFileWithFiber(mediaUrl, filePath)
+	err := downloadEtireFileWithFiber(mediaUrl, filePath)
 	if err != nil {
 		fs.DeleteFile(filePath)
 		return nil

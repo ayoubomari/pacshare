@@ -18,7 +18,8 @@ func descriptionPdf(sender_psid string, arguments []string) error {
 
 	pdfInfo, err := GetPdfInfo(pdfLink)
 	if err != nil {
-		return facebookSender.CallSendAPI(sender_psid, SomethingWasWrong)
+		facebookSender.CallSendAPI(sender_psid, SomethingWasWrong)
+		return fmt.Errorf("descriptionPdf: %w", err)
 	}
 
 	responseText := ""
@@ -38,7 +39,7 @@ func descriptionPdf(sender_psid string, arguments []string) error {
 		responseText += fmt.Sprintf("🌐: %s\n\n", pdfInfo.Language)
 	}
 
-	// final result
+	// if description is empty
 	if responseText == "" {
 		response := facebook.ResponseMessage{
 			Text: "No description was found. 🤷‍♂️",
@@ -46,6 +47,7 @@ func descriptionPdf(sender_psid string, arguments []string) error {
 		return facebookSender.CallSendAPI(sender_psid, response)
 	}
 
+	// final result
 	response := facebook.ResponseMessage{
 		Text: responseText,
 	}

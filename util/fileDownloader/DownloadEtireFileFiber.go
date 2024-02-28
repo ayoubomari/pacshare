@@ -11,7 +11,7 @@ import (
 )
 
 // download the entire file
-func DownloadEtireFileWithFiber(mediaUrl string, filePath string) error {
+func downloadEtireFileWithFiber(mediaUrl string, filePath string) error {
 	outputFile, err := os.Create(filePath)
 	if err != nil {
 		return fmt.Errorf("DownloadEtireFileWithFiber: %w", err)

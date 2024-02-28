@@ -25,7 +25,8 @@ func downloadApk(sender_psid string, arguments []string) error {
 		response := facebook.ResponseMessage{
 			Text: "Something wrong try another time 🙁.",
 		}
-		return facebookSender.CallSendAPI(sender_psid, response)
+		facebookSender.CallSendAPI(sender_psid, response)
+		return fmt.Errorf("downloadApk: %w", err)
 	}
 
 	fmt.Println("appInfo.Nodes.Meta.Data.File.Path:", appInfo.Nodes.Meta.Data.File.Path)

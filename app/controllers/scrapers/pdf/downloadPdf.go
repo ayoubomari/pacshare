@@ -36,6 +36,7 @@ func downloadPdf(sender_psid string, arguments []string) error {
 
 	}
 
+	// get pdf path link
 	pdfFilePath := "https://z45st682fx.zlib-cdn.com/dl2.php?id=" + strings.Split(pdfInfo.SessionID, "_")[0] + "&h=" + strings.Split(pdfInfo.SessionID, "_")[1] + "&u=cache&ext=pdf&n=Living%20in%20the%20light%20a%20guide%20to%20personal%20transformation"
 	fmt.Println("pdf link Path:", pdfFilePath)
 

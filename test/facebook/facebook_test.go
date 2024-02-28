@@ -5,13 +5,13 @@ import (
 	"testing"
 
 	"github.com/ayoubomari/pacshare/app/controllers/facebookSender"
-	facebookModel "github.com/ayoubomari/pacshare/app/models/facebook"
+	"github.com/ayoubomari/pacshare/app/models/facebook"
 )
 
 // test seding text message
 func TestSendFacebookMessage(t *testing.T) {
 	sender_psid := "4345084215546247"
-	response := facebookModel.ResponseMessage{
+	response := facebook.ResponseMessage{
 		Text: "hi from the test",
 	}
 	err := facebookSender.CallSendAPI(sender_psid, response)
@@ -23,10 +23,10 @@ func TestSendFacebookMessage(t *testing.T) {
 // test seding media message
 func TestSendFacebookMediaAttachment(t *testing.T) {
 	sender_psid := "4345084215546247"
-	response := facebookModel.ResponseMediaAttachment{
+	response := facebook.ResponseMediaAttachment{
 		Type: "image",
-		Payload: facebookModel.WebhookBodyAttachmentPayload{
-			URL:         "https://pacshare.omzor.com/img/forContent/run.gif",
+		Payload: facebook.WebhookBodyAttachmentPayload{
+			URL:         "https://lh3.googleusercontent.com/drive-viewer/AKGpihasoXadou5buCVgq4SZ827E_9jlkH2TuSRNRTko3jz0mL_q6JlDdQWRjd_ZNqUyW7UWU2vhQxLAnk0kRQgoBNOkOEnFaQ=w1600-h788",
 			Is_reusable: false,
 		},
 	}
@@ -39,16 +39,16 @@ func TestSendFacebookMediaAttachment(t *testing.T) {
 // test seding geniric template message
 func TestSendFacebookGeniricTamplateAttachment(t *testing.T) {
 	sender_psid := "4345084215546247"
-	response := facebookModel.ResponseTemplateAttachment{
+	response := facebook.ResponseTemplateAttachment{
 		Type: "template",
-		Payload: facebookModel.TemplateAttachmentPayload{
+		Payload: facebook.TemplateAttachmentPayload{
 			TemplateType: "generic",
-			Elements: []facebookModel.TemplateAttachmentElement{
+			Elements: []facebook.TemplateAttachmentElement{
 				{
 					Title:    "title",
 					Subtitle: "subtitle",
 					ImageURL: "https://pacshare.omzor.com/img/backgrounds/minimalisme.jpg",
-					Buttons: []facebookModel.TemplateAttachmentButton{
+					Buttons: []facebook.TemplateAttachmentButton{
 						{
 							Type:    "postback",
 							Title:   "button title",
@@ -68,12 +68,12 @@ func TestSendFacebookGeniricTamplateAttachment(t *testing.T) {
 // test seding button template message
 func TestSendFacebookButtonTamplateAttachment(t *testing.T) {
 	sender_psid := "4345084215546247"
-	response := facebookModel.ResponseTemplateAttachment{
+	response := facebook.ResponseTemplateAttachment{
 		Type: "template",
-		Payload: facebookModel.TemplateAttachmentPayload{
+		Payload: facebook.TemplateAttachmentPayload{
 			TemplateType: "button",
 			Text:         "button text",
-			Buttons: []facebookModel.TemplateButtonButton{
+			Buttons: []facebook.TemplateButtonButton{
 				{
 					Type:    "postback",
 					Title:   "Show",
@@ -101,9 +101,9 @@ func TestSendFacebookResponseAction(t *testing.T) {
 // test seding quick replay message
 func TestSendFacebookQuickReplay(t *testing.T) {
 	sender_psid := "4345084215546247"
-	response := facebookModel.QuickReplyMessage{
+	response := facebook.QuickReplyMessage{
 		Text: "title",
-		QuickReplies: []facebookModel.QuickReplyResponse{
+		QuickReplies: []facebook.QuickReplyResponse{
 			{
 				ContentType: "text",
 				Title:       "pac1",

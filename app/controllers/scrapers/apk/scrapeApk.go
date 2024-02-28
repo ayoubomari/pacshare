@@ -71,7 +71,7 @@ func scrapeApk(sender_psid string, searchKeyWords string) error {
 	comul := 0
 	n := config.MaxReturnedApk
 	for i := 0; i < len(bodyJson.Datalist.List); i++ {
-		// get app size
+		// get app size => size = (apk size + obb size)
 		fmt.Printf("%+v\n", bodyJson.Datalist.List[i])
 		size := bodyJson.Datalist.List[i].File.Filesize
 		if bodyJson.Datalist.List[i].Obb != nil {

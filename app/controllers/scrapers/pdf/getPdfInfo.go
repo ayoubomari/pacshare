@@ -9,6 +9,7 @@ import (
 	"github.com/ayoubomari/pacshare/util/request"
 )
 
+// get pdf info by scrapping the pdfLink html page
 func GetPdfInfo(pdfLink string) (pdfModels.ApkInfo, error) {
 	var apkInfo pdfModels.ApkInfo
 

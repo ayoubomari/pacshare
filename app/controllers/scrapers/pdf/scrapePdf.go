@@ -72,7 +72,7 @@ func scrapePdf(sender_psid string, searchKeyWords string) error {
 						{
 							Title:    fmt.Sprintf("%d# %s", comul, strings.Trim(doc.Find(".file-right").Eq(i).Find("h2").First().Text(), " ")),
 							Subtitle: doc.Find(".file-info").Eq(i).Children().Eq(0).Text(),
-							ImageURL: "", // "https://pacshare.omzor.com/img/forContent/pdfLogo.png"
+							ImageURL: "",
 							Buttons: []facebook.TemplateAttachmentButton{
 								{
 									Type:    "postback",
