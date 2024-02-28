@@ -39,7 +39,7 @@ func handleMessage(sender_psid string, message facebook.Message) error {
 	// pdf -> (?i)^(.pdf) (.+)$
 	pdfRegex := regexp.MustCompile("(?i)^(.pdf) (.+)$")
 	if match := pdfRegex.FindStringSubmatch(trimmedMessage); match != nil {
-		return pdf.RegexHundlerMessage(match[1:])
+		return pdf.RegexHundlerMessage(sender_psid, match[1:])
 	}
 
 	//default

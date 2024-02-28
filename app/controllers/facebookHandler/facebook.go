@@ -44,42 +44,44 @@ func FacebookPost(c *fiber.Ctx) error {
 
 	// Checks this is an event from a page subscription
 	if body.Object == "page" {
-		for _, entry := range body.Entry {
-			// Gets the body of the webhook event
-			webHookEvent := entry.Messaging[0]
+		go func() {
+			for _, entry := range body.Entry {
+				// Gets the body of the webhook event
+				webHookEvent := entry.Messaging[0]
 
-			// Get the sender PSID
-			sender_psid := webHookEvent.Sender.ID
+				// Get the sender PSID
+				sender_psid := webHookEvent.Sender.ID
 
-			// send type on action
-			go facebookSender.SendTypingOn(sender_psid)
+				// send type on action
+				go facebookSender.SendTypingOn(sender_psid)
 
-			if webHookEvent.Message.MID != "" && webHookEvent.Message.Quick_reply.Payload != "" { // handle quick replay
-				err := handleQuickReplay(sender_psid, webHookEvent.Message)
-				if err != nil {
-					fmt.Println(err)
-					return nil
-				}
-			} else if webHookEvent.Message.MID != "" && len(webHookEvent.Message.Attachments) > 0 { // handle attachments
-				err := handleAttachments(sender_psid, webHookEvent.Message)
-				if err != nil {
-					fmt.Println(err)
-					return nil
-				}
-			} else if webHookEvent.Message.MID != "" { // handle message
-				err := handleMessage(sender_psid, webHookEvent.Message)
-				if err != nil {
-					fmt.Println(err)
-					return nil
-				}
-			} else if webHookEvent.PostBack.Title != "" { // handle postback
-				err := handlePostback(sender_psid, webHookEvent.PostBack)
-				if err != nil {
-					fmt.Println(err)
-					return nil
+				if webHookEvent.Message.MID != "" && webHookEvent.Message.Quick_reply.Payload != "" { // handle quick replay
+					err := handleQuickReplay(sender_psid, webHookEvent.Message)
+					if err != nil {
+						fmt.Println(err)
+						return
+					}
+				} else if webHookEvent.Message.MID != "" && len(webHookEvent.Message.Attachments) > 0 { // handle attachments
+					err := handleAttachments(sender_psid, webHookEvent.Message)
+					if err != nil {
+						fmt.Println(err)
+						return
+					}
+				} else if webHookEvent.Message.MID != "" { // handle message
+					err := handleMessage(sender_psid, webHookEvent.Message)
+					if err != nil {
+						fmt.Println(err)
+						return
+					}
+				} else if webHookEvent.PostBack.Title != "" { // handle postback
+					err := handlePostback(sender_psid, webHookEvent.PostBack)
+					if err != nil {
+						fmt.Println(err)
+						return
+					}
 				}
 			}
-		}
+		}()
 
 		// Returns a '200 OK' response to all requests
 		return c.Status(200).SendString("EVENT_RECEIVED")

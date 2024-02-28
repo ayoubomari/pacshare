@@ -5,6 +5,7 @@ type TemplateMessage struct {
 	Attachment ResponseTemplateAttachment `json:"attachment"`
 }
 
+// this response used for geniric template and button template
 type ResponseTemplateAttachment struct {
 	// image | audio | video | file
 	Type    string                    `json:"type"`
@@ -32,7 +33,9 @@ type TemplateAttachmentButton struct {
 }
 
 type TemplateButtonButton struct {
+	// postback | web_url
 	Type    string `json:"type"`
 	Title   string `json:"title"`
-	Payload string `json:"payload"`
+	Payload string `json:"payload,omitempty"`
+	Url     string `json:"url,omitempty"`
 }

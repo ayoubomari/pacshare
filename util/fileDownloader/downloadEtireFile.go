@@ -11,7 +11,7 @@ import (
 )
 
 // download the entire file
-func downloadEtireFile(mediaUrl string, filePath string) error {
+func DownloadEtireFile(mediaUrl string, filePath string) error {
 	// Create an output file (you can use any io.Writer)
 	outputFile, err := os.Create(filePath)
 	if err != nil {

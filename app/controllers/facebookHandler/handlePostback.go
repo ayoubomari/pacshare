@@ -120,7 +120,7 @@ func handlePostback(sender_psid string, postback facebook.PostBack) error {
 	// pdf -> ^(PDF_::_)(.+)$
 	pdfRegex := regexp.MustCompile("^(PDF_::_)(.+)$")
 	if match := pdfRegex.FindStringSubmatch(postback.Payload); match != nil {
-		return pdf.RegexHundlerPostback(match[1:])
+		return pdf.RegexHundlerPostback(sender_psid, match[1:])
 	}
 
 	//default

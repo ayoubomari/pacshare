@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"math"
 	"net/url"
 
 	"github.com/ayoubomari/pacshare/app/controllers/facebookSender"
@@ -94,7 +93,7 @@ func scrapeApk(sender_psid string, searchKeyWords string) error {
 					Elements: []facebook.TemplateAttachmentElement{
 						{
 							Title:    fmt.Sprintf("%d# %s", comul, bodyJson.Datalist.List[i].Name),
-							Subtitle: fmt.Sprintf("%d MB", int(math.Floor(formats.ByteToMegaByte(size)))),
+							Subtitle: fmt.Sprintf("%.2f MB", formats.ByteToMegaByte(size)),
 							ImageURL: bodyJson.Datalist.List[i].Icon,
 							Buttons: []facebook.TemplateAttachmentButton{
 								{

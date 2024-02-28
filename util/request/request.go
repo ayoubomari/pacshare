@@ -66,7 +66,7 @@ func JSONReqest(method string, url string, jsonBytes []byte, headers map[string]
 	return resp, nil
 }
 
-// get a file size from the response header (ContentLength)
+// get a file size from the response header (ContentLength) using HEAD request
 func GetContentLengthFromResponseHeader(url string) (int, error) {
 	client := &http.Client{}
 	// Get the size of the file to download
@@ -76,4 +76,60 @@ func GetContentLengthFromResponseHeader(url string) (int, error) {
 	}
 	defer resp.Body.Close()
 	return int(resp.ContentLength), nil
+}
+
+func GetContentLengthWithGetReq(url string) (int, error) {
+	// Create an HTTP client
+	client := &http.Client{}
+
+	// Create a request
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return 0, err
+	}
+
+	// Make the request
+	resp, err := client.Do(req)
+	if err != nil {
+		return 0, err
+	}
+	defer resp.Body.Close()
+
+	// Check if the response is successful (status code 200)
+	if resp.StatusCode != http.StatusOK {
+		return 0, fmt.Errorf("Non-OK status code: %d", resp.StatusCode)
+	}
+
+	return int(resp.ContentLength), nil
+}
+
+// get redirect location
+func GetRedirectLocation(url string) (string, error) {
+	// Create an HTTP client
+	client := &http.Client{}
+
+	// Create a request
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return "", err
+	}
+
+	// Make the request
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	// Check if the response is a redirect
+	if resp.StatusCode >= 300 && resp.StatusCode < 400 {
+		redirectURL, err := resp.Location()
+		if err != nil {
+			return "", err
+		}
+		return redirectURL.String(), nil
+	}
+
+	// No redirect
+	return "", nil
 }

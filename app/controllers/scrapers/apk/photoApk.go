@@ -11,6 +11,10 @@ import (
 	"github.com/ayoubomari/pacshare/util/request"
 )
 
+var SomethingWasWrong = facebook.ResponseMessage{
+	Text: "Something wrong try another time 🙁.",
+}
+
 func photoApk(sender_psid string, arguments []string) error {
 	if len(arguments) < 1 {
 		return errors.New("arguments length is lower then 1")
@@ -19,10 +23,7 @@ func photoApk(sender_psid string, arguments []string) error {
 
 	appInfo, err := GetApkInfoWS2(apkId)
 	if err != nil {
-		response := facebook.ResponseMessage{
-			Text: "Something wrong try another time 🙁.",
-		}
-		return facebookSender.CallSendAPI(sender_psid, response)
+		return facebookSender.CallSendAPI(sender_psid, SomethingWasWrong)
 	}
 
 	res, err := request.JSONReqest(
@@ -32,19 +33,13 @@ func photoApk(sender_psid string, arguments []string) error {
 		nil,
 	)
 	if err != nil {
-		response := facebook.ResponseMessage{
-			Text: "Something wrong try another time 🙁.",
-		}
-		return facebookSender.CallSendAPI(sender_psid, response)
+		return facebookSender.CallSendAPI(sender_psid, SomethingWasWrong)
 	}
 	defer res.Body.Close()
 
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
-		response := facebook.ResponseMessage{
-			Text: "Something wrong try another time 🙁.",
-		}
-		return facebookSender.CallSendAPI(sender_psid, response)
+		return facebookSender.CallSendAPI(sender_psid, SomethingWasWrong)
 	}
 
 	fmt.Println("getting the html page...")

@@ -1,6 +1,8 @@
 package formats
 
 import (
+	"errors"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -25,4 +27,27 @@ func FormatNumberWithCommas(nmbr int64) string {
 
 	// Return the formatted string
 	return result.String()
+}
+
+func ParseFloat(input string) (float64, error) {
+	// Define the regular expression pattern
+	regexPattern := `([0-9.]+)`
+
+	// Compile the regular expression
+	re := regexp.MustCompile(regexPattern)
+
+	// Find the match in the input string
+	match := re.FindStringSubmatch(input)
+
+	if len(match) < 2 {
+		return 0, errors.New("no number found in the input string")
+	}
+
+	// Convert the matched string to a float64
+	number, err := strconv.ParseFloat(match[1], 64)
+	if err != nil {
+		return 0, err
+	}
+
+	return number, nil
 }

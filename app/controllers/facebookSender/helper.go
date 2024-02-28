@@ -29,6 +29,7 @@ func facebookSendRequest(sender_psid string, requestBodyBytes []byte, Errornotif
 	if err != nil {
 		return fmt.Errorf("facebookSendRequest: %w", err)
 	}
+	fmt.Println(string(bodyBytes))
 	var bodyJson facebook.CallSendAPIResonse
 	err = json.Unmarshal(bodyBytes, &bodyJson)
 	if err != nil {
@@ -36,10 +37,17 @@ func facebookSendRequest(sender_psid string, requestBodyBytes []byte, Errornotif
 	}
 	if Errornotify && bodyJson.Error.Message != "" {
 		fmt.Println("facebook was returned an error", bodyJson.Error.Message)
-		response := facebook.ResponseMessage{
-			Text: "Something wrong try another time 🙁.",
+		if bodyJson.Error.Message == "(#100) Upload failed" { // if it's an attachment upload error
+			response := facebook.ResponseMessage{
+				Text: "Failed to upload an attachment 🙁.",
+			}
+			CallSendAPI(sender_psid, response)
+		} else {
+			response := facebook.ResponseMessage{
+				Text: "Something wrong try another time 🙁.",
+			}
+			CallSendAPI(sender_psid, response)
 		}
-		CallSendAPI(sender_psid, response)
 	}
 
 	return nil

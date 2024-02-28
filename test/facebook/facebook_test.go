@@ -24,9 +24,9 @@ func TestSendFacebookMessage(t *testing.T) {
 func TestSendFacebookMediaAttachment(t *testing.T) {
 	sender_psid := "4345084215546247"
 	response := facebookModel.ResponseMediaAttachment{
-		Type: "file",
+		Type: "image",
 		Payload: facebookModel.WebhookBodyAttachmentPayload{
-			URL:         "pacshare.omzor.com/src/apks/facebook.apk",
+			URL:         "https://pacshare.omzor.com/img/forContent/run.gif",
 			Is_reusable: false,
 		},
 	}
@@ -47,7 +47,7 @@ func TestSendFacebookGeniricTamplateAttachment(t *testing.T) {
 				{
 					Title:    "title",
 					Subtitle: "subtitle",
-					ImageURL: "https://scontent.frak2-1.fna.fbcdn.net/v/t1.15752-9/370319136_3585075875091292_546338281524030784_n.png?stp=dst-png_s2048x2048&_nc_cat=111&ccb=1-7&_nc_sid=8cd0a2&_nc_ohc=ZzFhvIpnXDEAX8NSLWQ&_nc_ht=scontent.frak2-1.fna&oh=03_AdR_XV_5NDkC5FEH3kpziPRRaDWKayFbVULxTeYO3PCsFw&oe=65F43D2E",
+					ImageURL: "https://pacshare.omzor.com/img/backgrounds/minimalisme.jpg",
 					Buttons: []facebookModel.TemplateAttachmentButton{
 						{
 							Type:    "postback",
@@ -78,6 +78,7 @@ func TestSendFacebookButtonTamplateAttachment(t *testing.T) {
 					Type:    "postback",
 					Title:   "Show",
 					Payload: "template button payload",
+					// Url:   "https://www.messenger.com/",
 				},
 			},
 		},

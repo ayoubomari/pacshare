@@ -189,7 +189,7 @@ func DownloadAndSendFile(sender_psid string, mediaUrl string, outputPath string,
 
 	if contentSize <= chunkSize {
 		filePath := fmt.Sprintf(fileNamePattern, 1)
-		err := downloadEtireFile(mediaUrl, filePath)
+		err := DownloadEtireFile(mediaUrl, filePath)
 		if err != nil {
 			fs.DeleteFile(filePath)
 		}
@@ -209,7 +209,7 @@ func DownloadAndSendFile(sender_psid string, mediaUrl string, outputPath string,
 	} else {
 		// download the zero file
 		filePath := fmt.Sprintf(fileNamePattern, 0)
-		err := downloadEtireFile(mediaUrl, filePath)
+		err := DownloadEtireFile(mediaUrl, filePath)
 		if err != nil {
 			fs.DeleteFile(filePath)
 		}
