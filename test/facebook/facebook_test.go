@@ -26,7 +26,7 @@ func TestSendFacebookMediaAttachment(t *testing.T) {
 	response := facebook.ResponseMediaAttachment{
 		Type: "image",
 		Payload: facebook.WebhookBodyAttachmentPayload{
-			URL:         "https://lh3.googleusercontent.com/drive-viewer/AKGpihasoXadou5buCVgq4SZ827E_9jlkH2TuSRNRTko3jz0mL_q6JlDdQWRjd_ZNqUyW7UWU2vhQxLAnk0kRQgoBNOkOEnFaQ=w1600-h788",
+			URL:         "https://static.wikia.nocookie.net/pacman/images/2/24/Pac-Man-0.png/revision/latest?cb=20190526005949",
 			Is_reusable: false,
 		},
 	}
@@ -47,7 +47,7 @@ func TestSendFacebookGeniricTamplateAttachment(t *testing.T) {
 				{
 					Title:    "title",
 					Subtitle: "subtitle",
-					ImageURL: "https://pacshare.omzor.com/img/backgrounds/minimalisme.jpg",
+					ImageURL: "https://pacshare.omzor.com/img/backgrounds/minimalisme.jpeg",
 					Buttons: []facebook.TemplateAttachmentButton{
 						{
 							Type:    "postback",

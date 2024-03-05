@@ -17,28 +17,71 @@ func handlePostback(sender_psid string, postback facebook.PostBack) error {
 	// global postbacks
 	switch postback.Payload {
 	case "GET_STARTED_PAYLOAD":
-		response := facebook.ResponseMessage{
-			Text: "Hi, how can I help you?",
+
+		responseMessage := facebook.ResponseMessage{
+			Text: "Hi! Welcome on PacShare 💖\n" +
+				"It's a messenger chat bot 🤖\n" +
+				"For watching Youtube on Facebook messenger 🎬\n" +
+				"We hope you like It 😁",
 		}
-		err := facebookSender.CallSendAPI(sender_psid, response)
+		err := facebookSender.CallSendAPI(sender_psid, responseMessage)
 		if err != nil {
 			return fmt.Errorf("handleMessage: %w", err)
 		}
-		return nil
-	case "Greeting":
-		response := facebook.ResponseMessage{
-			Text: "Hi, how can I help you?",
+
+		responseTemplateAttachment := facebook.ResponseTemplateAttachment{
+			Type: "template",
+			Payload: facebook.TemplateAttachmentPayload{
+				TemplateType: "button",
+				Text:         "🚨For using this service you have to Like our page or you will be banned.🚨\n\n🚨لستخدام هذه الخدمة ، عليك أن تقوم بلإعجاب بالصفحة لكي لا يتم حظرك🚨\n\n☟\nfb.com/PacShare1",
+				Buttons: []facebook.TemplateButtonButton{
+					{
+						Type:  "web_url",
+						Url:   "https://fb.com/PacShare1",
+						Title: "Like page",
+					},
+				},
+			},
 		}
-		err := facebookSender.CallSendAPI(sender_psid, response)
+		err = facebookSender.CallSendAPI(sender_psid, responseTemplateAttachment)
 		if err != nil {
 			return fmt.Errorf("handleMessage: %w", err)
 		}
+
+		responseMediaAttachment := facebook.ResponseMediaAttachment{
+			Type: "image",
+			Payload: facebook.WebhookBodyAttachmentPayload{
+				URL:         "https://pacshare.omzor.com/static_src/imgs/run.gif",
+				Is_reusable: true,
+			},
+		}
+		err = facebookSender.CallSendAPI(sender_psid, responseMediaAttachment)
+		if err != nil {
+			return fmt.Errorf("handleMessage: %w", err)
+		}
+
 		return nil
 
 	// for menu
-	case "YOUTUBE":
-		response := facebook.ResponseMessage{
-			Text: "for youtube",
+	case "DOWNLOAD_PACSHARE_APP":
+		response := facebook.ResponseTemplateAttachment{
+			Type: "template",
+			Payload: facebook.TemplateAttachmentPayload{
+				TemplateType: "button",
+				Text:         "Select your platform 📲",
+				Buttons: []facebook.TemplateButtonButton{
+					{
+						Type:  "web_url",
+						Title: "Android 🤖",
+						Url:   "https://www.facebook.com/groups/1759083970948072/permalink/2325309854325478/",
+					},
+					// {
+					// 	Type:  "web_url",
+					// 	Title: "IOS 🍏",
+					// 	Url:   "https://www.facebook.com/groups/1759083970948072/permalink/2325309854325478/",
+					// },
+				},
+			},
 		}
 		err := facebookSender.CallSendAPI(sender_psid, response)
 		if err != nil {
@@ -47,7 +90,10 @@ func handlePostback(sender_psid string, postback facebook.PostBack) error {
 		return nil
 	case "REVIEW":
 		response := facebook.ResponseMessage{
-			Text: "for review",
+			Text: "Help us to improve our service by review us 🙏, Write your opinions and your criticisms ✍️, We will be very happy to read your review 😊.\n" +
+				"\n\n" +
+				"To review us click here 👇\n" +
+				"https://www.facebook.com/pacshare1/reviews/",
 		}
 		err := facebookSender.CallSendAPI(sender_psid, response)
 		if err != nil {
@@ -56,39 +102,9 @@ func handlePostback(sender_psid string, postback facebook.PostBack) error {
 		return nil
 	case "HELP":
 		response := facebook.ResponseMessage{
-			Text: "for help",
-		}
-		err := facebookSender.CallSendAPI(sender_psid, response)
-		if err != nil {
-			return fmt.Errorf("handleMessage: %w", err)
-		}
-		return nil
-	case "SUPPORT_US":
-		response := facebook.ResponseMessage{
-			Text: "for SUPPORT_US",
-		}
-		err := facebookSender.CallSendAPI(sender_psid, response)
-		if err != nil {
-			return fmt.Errorf("handleMessage: %w", err)
-		}
-		return nil
-	case "DOWNLOAD_PACSHARE_APP":
-		response := facebook.QuickReplyMessage{
-			Text: "Download PacShare App",
-			QuickReplies: []facebook.QuickReplyResponse{
-				{
-					ContentType: "text",
-					Title:       "Android",
-					Payload:     "DOWNLOAD_PACSHARE_APP_ANDROID",
-					ImageURL:    "https://pacshare.omzor.com/static_src/imgs/android_logo.png",
-				},
-				{
-					ContentType: "text",
-					Title:       "IOS",
-					Payload:     "DOWNLOAD_PACSHARE_APP_IOS",
-					ImageURL:    "https://pacshare.omzor.com/static_src/imgs/ios_logo.png",
-				},
-			},
+			Text: "If you have any questions or need any help about this service 📺, You can write It in the comments section of this post 💬, I will answer your questions as soon as possible 👍.\n" +
+				"\n" +
+				"https://fb.com/pacshare1/photos/127230276413440",
 		}
 		err := facebookSender.CallSendAPI(sender_psid, response)
 		if err != nil {

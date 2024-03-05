@@ -7,8 +7,8 @@ import (
 )
 
 func main() {
-	agent := fiber.Get("https://z45st682fx.zlib-cdn.com/dl2.php?id=36551844&h=0d482032919c1a052d06d96ed8df7bb7&u=cache&ext=pdf&n=Living%20in%20the%20light%20a%20guide%20to%20personal%20transformation")
-	statusCode, _, errs := agent.Bytes()
+	agent := fiber.Get("https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Gosforth_Cross_Loki_and_Sigyn.jpg/1080px-Gosforth_Cross_Loki_and_Sigyn.jpeg")
+	statusCode, body, errs := agent.Bytes()
 	if len(errs) > 0 {
 		fmt.Println(errs)
 		return
@@ -23,8 +23,7 @@ func main() {
 		fmt.Println("Header", string(key), "value", string(value))
 	})
 
-	contentLength := resp.Header.ContentLength()
-	fmt.Println("contentLength:", contentLength)
+	fmt.Println("body:", string(body))
 	// Release the response to free up resources
 	defer fiber.ReleaseResponse(resp)
 }

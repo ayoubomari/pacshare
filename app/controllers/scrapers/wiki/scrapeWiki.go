@@ -7,7 +7,6 @@ import (
 	"io"
 	"math/rand"
 	"net/url"
-	"regexp"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -57,7 +56,7 @@ func scrapeWiki(sender_psid string, arguments []string) error {
 	}
 	fmt.Println("pagesTitles:", pagesTitles)
 
-	doc, text, err := getWikiArticleTextHtmlByPageTitle(lang, pagesTitles[0], true)
+	_, text, err := getWikiArticleTextHtmlByPageTitle(lang, pagesTitles[0], true)
 	if err != nil {
 		facebookSender.CallSendAPI(sender_psid, SomethingWasWrong)
 		return fmt.Errorf("scrapeWiki: %w", err)
@@ -88,25 +87,26 @@ func scrapeWiki(sender_psid string, arguments []string) error {
 	// send the article photos
 	// Find all images within the element with class "thumb" and get the src attribute
 	// Replace digits followed by "px-" with "1080px-"
-	re2 := regexp.MustCompile("[0-9]{1,4}px-")
-	doc.Find(".thumb img").Each(func(i int, s *goquery.Selection) {
-		if i < 10 { // only the firt 10 photos
-			src, exists := s.Attr("src")
-			finalResult := re2.ReplaceAllString(src, "1080px-")
+	// re2 := regexp.MustCompile("[0-9]{1,4}px-")
+	// doc.Find(".thumb img").Each(func(i int, s *goquery.Selection) {
+	// 	if i < 10 { // only the firt 10 photos
+	// 		src, exists := s.Attr("src")
+	// 		fmt.Println("src:", src)
+	// 		finalResult := re2.ReplaceAllString(src, "1080px-")
 
-			if exists {
-				fmt.Printf("Image %d: %s\n", i+1, fmt.Sprintf("https:%s", finalResult))
-				response := facebook.ResponseMediaAttachment{
-					Type: "image",
-					Payload: facebook.WebhookBodyAttachmentPayload{
-						URL:         fmt.Sprintf("https:%s", finalResult),
-						Is_reusable: false,
-					},
-				}
-				go facebookSender.CallSendAPI(sender_psid, response)
-			}
-		}
-	})
+	// 		if exists {
+	// 			fmt.Printf("Image %d: %s\n", i+1, fmt.Sprintf("https:%s", finalResult))
+	// 			response := facebook.ResponseMediaAttachment{
+	// 				Type: "file",
+	// 				Payload: facebook.WebhookBodyAttachmentPayload{
+	// 					URL:         fmt.Sprintf("https:%s", finalResult),
+	// 					Is_reusable: false,
+	// 				},
+	// 			}
+	// 			go facebookSender.CallSendAPI(sender_psid, response)
+	// 		}
+	// 	}
+	// })
 
 	return nil
 }
@@ -216,6 +216,11 @@ func getWikiArticleTextHtmlByPageTitle(lang string, pageTitle string, isRecursiv
 		wikiTitle := strings.ReplaceAll(href, "/wiki/", "")
 		fmt.Println("new wiki title:", wikiTitle)
 		return getWikiArticleTextHtmlByPageTitle(lang, wikiTitle, false)
+	}
+
+	text, err = formats.Utf8ToBase64(text)
+	if err != nil {
+		return nil, &text, fmt.Errorf("error converting utf8 to base64: %w", err)
 	}
 
 	return doc, &text, nil

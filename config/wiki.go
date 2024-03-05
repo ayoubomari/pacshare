@@ -6,7 +6,6 @@ var WikiSepportedLanguages = []string{
 	"ar",
 	"es",
 	"ru",
-	"ru",
 	"it",
 	"de",
 }

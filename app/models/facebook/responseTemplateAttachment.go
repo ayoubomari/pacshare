@@ -7,12 +7,13 @@ type TemplateMessage struct {
 
 // this response used for geniric template and button template
 type ResponseTemplateAttachment struct {
-	// image | audio | video | file
+	// template
 	Type    string                    `json:"type"`
 	Payload TemplateAttachmentPayload `json:"payload"`
 }
 
 type TemplateAttachmentPayload struct {
+	// button | generic
 	TemplateType string                      `json:"template_type"`
 	Elements     []TemplateAttachmentElement `json:"elements,omitempty"`
 	Text         string                      `json:"text,omitempty"`
