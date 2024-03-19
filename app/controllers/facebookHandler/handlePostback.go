@@ -33,7 +33,7 @@ func handlePostback(sender_psid string, postback facebook.PostBack) error {
 			Type: "template",
 			Payload: facebook.TemplateAttachmentPayload{
 				TemplateType: "button",
-				Text:         "🚨For using this service you have to Like our page or you will be banned.🚨\n\n🚨لستخدام هذه الخدمة ، عليك أن تقوم بلإعجاب بالصفحة لكي لا يتم حظرك🚨\n\n☟\nfb.com/PacShare1",
+				Text:         "🚨For using this service you have to Like our page.🚨\n\n🚨لستخدام هذه الخدمة ، عليك أن تقوم بلإعجاب بالصفحة🚨\n\n☟\nfb.com/PacShare1",
 				Buttons: []facebook.TemplateButtonButton{
 					{
 						Type:  "web_url",
@@ -68,7 +68,7 @@ func handlePostback(sender_psid string, postback facebook.PostBack) error {
 			Type: "template",
 			Payload: facebook.TemplateAttachmentPayload{
 				TemplateType: "button",
-				Text:         "Select your platform 📲",
+				Text:         "Select your OS 📲",
 				Buttons: []facebook.TemplateButtonButton{
 					{
 						Type:  "web_url",
@@ -102,7 +102,7 @@ func handlePostback(sender_psid string, postback facebook.PostBack) error {
 		return nil
 	case "HELP":
 		response := facebook.ResponseMessage{
-			Text: "If you have any questions or need any help about this service 📺, You can write It in the comments section of this post 💬, I will answer your questions as soon as possible 👍.\n" +
+			Text: "If you have any questions or need any help about this service 📺, You can write It in the comments section of this post 💬, we will answer your questions as soon as possible 👍.\n" +
 				"\n" +
 				"https://fb.com/pacshare1/photos/127230276413440",
 		}

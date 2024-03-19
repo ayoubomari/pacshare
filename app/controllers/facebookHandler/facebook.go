@@ -55,20 +55,20 @@ func FacebookPost(c *fiber.Ctx) error {
 				// send type on action
 				go facebookSender.SendTypingOn(sender_psid)
 
-				if webHookEvent.Message.MID != "" && webHookEvent.Message.Quick_reply.Payload != "" { // handle quick replay
+				if webHookEvent.Message.Quick_reply.Payload != "" { // handle quick replay
 					err := handleQuickReplay(sender_psid, webHookEvent.Message)
 					if err != nil {
 						fmt.Println(err)
 						return
 					}
-				} else if webHookEvent.Message.MID != "" && len(webHookEvent.Message.Attachments) > 0 { // handle attachments
-					err := handleAttachments(sender_psid, webHookEvent.Message)
+				} else if webHookEvent.Message.Text != "" { // handle message
+					err := handleMessage(sender_psid, webHookEvent.Message)
 					if err != nil {
 						fmt.Println(err)
 						return
 					}
-				} else if webHookEvent.Message.MID != "" { // handle message
-					err := handleMessage(sender_psid, webHookEvent.Message)
+				} else if len(webHookEvent.Message.Attachments) > 0 { // handle attachments
+					err := handleAttachments(sender_psid, webHookEvent.Message)
 					if err != nil {
 						fmt.Println(err)
 						return

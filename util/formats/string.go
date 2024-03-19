@@ -2,6 +2,8 @@ package formats
 
 import (
 	"encoding/base64"
+	"fmt"
+	"path"
 	"regexp"
 	"strings"
 )
@@ -35,4 +37,23 @@ func Utf8ToBase64(input string) (string, error) {
 	base64String := base64.StdEncoding.EncodeToString(utf8Bytes)
 
 	return base64String, nil
+}
+
+func ExtractImageNameFromUrl(url string) (imageName, extension string, err error) {
+	// Extract the path component of the URL
+	imagePath := path.Base(url)
+
+	// Split the filename and extension
+	parts := strings.Split(imagePath, ".")
+
+	// Check if the URL has a valid format
+	if len(parts) < 2 {
+		return "", "", fmt.Errorf("invalid URL format")
+	}
+
+	// Get the image name and extension
+	imageName = parts[0]
+	extension = parts[1]
+
+	return imageName, extension, nil
 }
