@@ -13,12 +13,12 @@ import (
 )
 
 func downloadApk(sender_psid string, arguments []string) error {
-	fmt.Println("from downloadAPK")
+	// fmt.Println("from downloadAPK")
 	if len(arguments) < 1 {
 		return errors.New("arguments length is lower then 1")
 	}
 	apkId := arguments[0]
-	fmt.Println("apkId:", apkId)
+	// fmt.Println("apkId:", apkId)
 
 	appInfo, err := GetApkInfoWS2(apkId)
 	if err != nil {
@@ -29,8 +29,8 @@ func downloadApk(sender_psid string, arguments []string) error {
 		return fmt.Errorf("downloadApk: %w", err)
 	}
 
-	fmt.Println("appInfo.Nodes.Meta.Data.File.Path:", appInfo.Nodes.Meta.Data.File.Path)
-	fmt.Println(strings.ReplaceAll(appInfo.Nodes.Meta.Data.File.Path, "pool.", "premium."))
+	// fmt.Println("appInfo.Nodes.Meta.Data.File.Path:", appInfo.Nodes.Meta.Data.File.Path)
+	// fmt.Println(strings.ReplaceAll(appInfo.Nodes.Meta.Data.File.Path, "pool.", "premium."))
 	// download and send apk
 	fileDownloader.DownloadAndSendFile(sender_psid, strings.ReplaceAll(appInfo.Nodes.Meta.Data.File.Path, "pool.", "premium."), "./public/src/apks/", formats.ToFileNameString(appInfo.Nodes.Meta.Data.Uname), "_pac.apk", appInfo.Nodes.Meta.Data.File.Filesize, config.ApkChunksMaxSize, "file")
 	//send apk complition response message

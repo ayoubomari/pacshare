@@ -14,12 +14,12 @@ import (
 )
 
 func photoPdf(sender_psid string, arguments []string) error {
-	fmt.Println("from downloadPdf")
+	// fmt.Println("from downloadPdf")
 	if len(arguments) < 1 {
 		return errors.New("arguments length is lower then 1")
 	}
 	pdfLink := arguments[0]
-	fmt.Println("pdfLink:", pdfLink)
+	// fmt.Println("pdfLink:", pdfLink)
 
 	pdfInfo, err := GetPdfInfo(pdfLink)
 	if err != nil {

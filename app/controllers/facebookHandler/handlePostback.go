@@ -73,7 +73,7 @@ func handlePostback(sender_psid string, postback facebook.PostBack) error {
 					{
 						Type:  "web_url",
 						Title: "Android 🤖",
-						Url:   "https://www.facebook.com/groups/1759083970948072/permalink/2325309854325478/",
+						Url:   "https://www.facebook.com/groups/1759083970948072/permalink/2340195572836906/",
 					},
 					// {
 					// 	Type:  "web_url",
@@ -82,6 +82,21 @@ func handlePostback(sender_psid string, postback facebook.PostBack) error {
 					// },
 				},
 			},
+		}
+		err := facebookSender.CallSendAPI(sender_psid, response)
+		if err != nil {
+			return fmt.Errorf("handleMessage: %w", err)
+		}
+		return nil
+	case "SUPPORT_US":
+		response := facebook.ResponseMessage{
+			Text: "⚙️ Behind the scenes, our team dedicates significant time and resources to keep the bot running smoothly and to introduce new features that enhance your experience.\n" +
+				"\n" +
+				"🌟 Your contribution goes a long way in helping us cover server costs and invest in further development.\n" +
+				"\n" +
+				"☕ If you appreciate our efforts and would like to support us, consider buying us a coffee!\n" +
+				"\n" +
+				"https://buymeacoffee.com/pacshare",
 		}
 		err := facebookSender.CallSendAPI(sender_psid, response)
 		if err != nil {

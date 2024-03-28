@@ -52,7 +52,7 @@ func scrapeApk(sender_psid string, searchKeyWords string) error {
 	if err != nil {
 		return fmt.Errorf("scrapeApk: %w", err)
 	}
-	fmt.Println(string(bodyBytes))
+	// fmt.Println(string(bodyBytes))
 	var bodyJson scrapApkResponseBody
 	err = json.Unmarshal(bodyBytes, &bodyJson)
 	if err != nil {
@@ -72,10 +72,10 @@ func scrapeApk(sender_psid string, searchKeyWords string) error {
 	n := config.MaxReturnedApk
 	for i := 0; i < len(bodyJson.Datalist.List); i++ {
 		// get app size => size = (apk size + obb size)
-		fmt.Printf("%+v\n", bodyJson.Datalist.List[i])
+		// fmt.Printf("%+v\n", bodyJson.Datalist.List[i])
 		size := bodyJson.Datalist.List[i].File.Filesize
 		if bodyJson.Datalist.List[i].Obb != nil {
-			fmt.Println("bodyJson.Datalist.List[i].Obb.Main.Filesize:", bodyJson.Datalist.List[i].Obb.Main.Filesize)
+			// fmt.Println("bodyJson.Datalist.List[i].Obb.Main.Filesize:", bodyJson.Datalist.List[i].Obb.Main.Filesize)
 			size += bodyJson.Datalist.List[i].Obb.Main.Filesize
 		}
 

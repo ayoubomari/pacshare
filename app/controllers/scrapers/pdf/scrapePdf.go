@@ -51,7 +51,7 @@ func scrapePdf(sender_psid string, searchKeyWords string) error {
 			continue
 		}
 		size := formats.NumberToMegaBytes(sizeFloat)
-		fmt.Printf("%d\n", size)
+		// fmt.Printf("%d\n", size)
 		if size <= config.ApkMaxAppSize {
 			n--
 			comul++
@@ -59,10 +59,10 @@ func scrapePdf(sender_psid string, searchKeyWords string) error {
 				break
 			}
 
-			imgURL, _ := doc.Find(".file-left").Eq(i).Find("img").First().Attr("src")
+			// imgURL, _ := doc.Find(".file-left").Eq(i).Find("img").First().Attr("src")
 			pdfLink, _ := doc.Find(".file-left").Eq(i).Find("a").First().Attr("href")
-			fmt.Println("imgURL:", imgURL)
-			fmt.Println("pdfLink:", pdfLink)
+			// fmt.Println("imgURL:", imgURL)
+			// fmt.Println("pdfLink:", pdfLink)
 
 			response := facebook.ResponseTemplateAttachment{
 				Type: "template",

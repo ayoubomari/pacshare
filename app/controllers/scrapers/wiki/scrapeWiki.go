@@ -54,7 +54,7 @@ func scrapeWiki(sender_psid string, arguments []string) error {
 		facebookSender.CallSendAPI(sender_psid, SomethingWasWrong)
 		return fmt.Errorf("scrapeWiki: %w", err)
 	}
-	fmt.Println("pagesTitles:", pagesTitles)
+	// fmt.Println("pagesTitles:", pagesTitles)
 
 	_, text, err := getWikiArticleTextHtmlByPageTitle(lang, pagesTitles[0], true)
 	if err != nil {
@@ -124,7 +124,7 @@ func getwikiPagesTitles(lang string, userTitle string) ([]string, error) {
 	searchParams.Set("srsearch", userTitle)
 	// Build the full URL with parameters
 	fullURL := fmt.Sprintf("%s?%s", apiEndpoint, searchParams.Encode())
-	fmt.Println("fullURL:", fullURL)
+	// fmt.Println("fullURL:", fullURL)
 
 	res, err := request.JSONReqest(
 		"GET",
@@ -160,7 +160,7 @@ func getwikiPagesTitles(lang string, userTitle string) ([]string, error) {
 func getWikiArticleTextHtmlByPageTitle(lang string, pageTitle string, isRecursive bool) (*goquery.Document, *string, error) {
 	var text string
 	pageTitle = strings.ReplaceAll(pageTitle, " ", "_")
-	fmt.Printf("https://%s.wikipedia.org/w/api.php?action=parse&prop=text&formatversion=2&format=json&page=%s\n", lang, url.QueryEscape(pageTitle))
+	// fmt.Printf("https://%s.wikipedia.org/w/api.php?action=parse&prop=text&formatversion=2&format=json&page=%s\n", lang, url.QueryEscape(pageTitle))
 	res, err := request.JSONReqest(
 		"GET",
 		fmt.Sprintf("https://%s.wikipedia.org/w/api.php?action=parse&prop=text&formatversion=2&format=json&page=%s", lang, url.QueryEscape(pageTitle)),
@@ -179,7 +179,7 @@ func getWikiArticleTextHtmlByPageTitle(lang string, pageTitle string, isRecursiv
 	var bodyJson scrapeWikiResponseBody
 	err = json.Unmarshal(bodyBytes, &bodyJson)
 	if err != nil {
-		fmt.Println(string(bodyBytes))
+		// fmt.Println(string(bodyBytes))
 		return nil, &text, fmt.Errorf("scrapeWiki: json unmarshale error %w", err)
 	}
 
@@ -214,7 +214,7 @@ func getWikiArticleTextHtmlByPageTitle(lang string, pageTitle string, isRecursiv
 		}
 
 		wikiTitle := strings.ReplaceAll(href, "/wiki/", "")
-		fmt.Println("new wiki title:", wikiTitle)
+		// fmt.Println("new wiki title:", wikiTitle)
 		return getWikiArticleTextHtmlByPageTitle(lang, wikiTitle, false)
 	}
 

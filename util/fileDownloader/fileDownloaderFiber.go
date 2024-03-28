@@ -36,7 +36,7 @@ func DownloadAndSendFileWithFiber(sender_psid string, mediaUrl string, outputPat
 	numChunks = (contentSize + chunkSize - 1) / chunkSize
 	fileNamePattern = outputPath + fileName + "_" + fmt.Sprint(randomNumber) + "." + fmt.Sprint(numChunks) + "_" + "%d" + fileExtentions
 
-	fmt.Println("contentSize:", contentSize)
+	// fmt.Println("contentSize:", contentSize)
 
 	if contentSize <= chunkSize {
 		newFilePath := fmt.Sprintf(fileNamePattern, 1)
@@ -49,7 +49,7 @@ func DownloadAndSendFileWithFiber(sender_psid string, mediaUrl string, outputPat
 
 		// send the entire file and delete it
 		fileUrl := fmt.Sprintf("https://pacshare.omzor.com/%s", strings.ReplaceAll(newFilePath, "./public/", ""))
-		fmt.Println("fileUrl", fileUrl)
+		// fmt.Println("fileUrl", fileUrl)
 		response := facebook.ResponseMediaAttachment{
 			Type: responseMediaType,
 			Payload: facebook.WebhookBodyAttachmentPayload{

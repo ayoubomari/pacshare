@@ -43,7 +43,7 @@ func GetPdfInfo(pdfLink string) (pdfModels.ApkInfo, error) {
 	if len(dataPreviewSlices) >= 4 {
 		sessionID = fmt.Sprintf("%s_%s", dataPreviewSlices[1], dataPreviewSlices[3])
 	}
-	fmt.Println("sessionID:", sessionID)
+	// fmt.Println("sessionID:", sessionID)
 
 	// build the return
 	apkInfo = pdfModels.ApkInfo{

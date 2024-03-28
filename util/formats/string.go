@@ -12,7 +12,7 @@ func ToFileNameString(fileName string) string {
 	emojiRegex := regexp.MustCompile(`[\p{So}\p{Sk}\p{Sm}\p{Sc}\p{S}]`)
 	fileName = emojiRegex.ReplaceAllString(fileName, "")
 
-	charsToReplace := []string{"/", "*", "?", "\"", "<", ">", "|", "{", "}", "\\", "^", "~", "[", "]", "`", "!", "$", "&", "'", "(", ")", ",", ":", ";", "@"}
+	charsToReplace := []string{"/", ".", "*", "?", "\"", "<", ">", "|", "{", "}", "\\", "^", "~", "[", "]", "`", "!", "$", "&", "'", "(", ")", ",", ":", ";", "@"}
 	for _, char := range charsToReplace {
 		fileName = strings.ReplaceAll(fileName, char, "")
 	}

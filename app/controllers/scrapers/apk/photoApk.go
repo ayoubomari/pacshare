@@ -45,7 +45,7 @@ func photoApk(sender_psid string, arguments []string) error {
 		return fmt.Errorf("photoApk: %w", err)
 	}
 
-	fmt.Println("getting the html page...")
+	// fmt.Println("getting the html page...")
 	imgNum := 0
 	// send screenshots
 	doc.Find(".app-view__SlideBundlerContainer-sc-oiuh9w-2 img").Each(func(i int, s *goquery.Selection) {
@@ -54,7 +54,7 @@ func photoApk(sender_psid string, arguments []string) error {
 		if exists {
 			imgNum++
 
-			fmt.Printf("Image %d: %s\n", i+1, src)
+			// fmt.Printf("Image %d: %s\n", i+1, src)
 			response := facebook.ResponseMediaAttachment{
 				Type: "image",
 				Payload: facebook.WebhookBodyAttachmentPayload{

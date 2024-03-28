@@ -23,7 +23,7 @@ func sendFileChunks(sender_psid string, fileNamePattern string, contentSize int6
 
 	// Calculate the number of chunks
 	numChunks := (contentSize + chunkSize - 1) / chunkSize
-	fmt.Println("numChunks:", numChunks)
+	// fmt.Println("numChunks:", numChunks)
 
 	// Iterate through the chunks and copy them to separate files
 	for i := int64(0); i < numChunks; i++ {

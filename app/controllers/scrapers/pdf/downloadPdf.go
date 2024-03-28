@@ -17,12 +17,12 @@ var SomethingWasWrong = facebook.ResponseMessage{
 }
 
 func downloadPdf(sender_psid string, arguments []string) error {
-	fmt.Println("from downloadPdf")
+	// fmt.Println("from downloadPdf")
 	if len(arguments) < 1 {
 		return errors.New("arguments length is lower then 1")
 	}
 	pdfLink := arguments[0]
-	fmt.Println("pdfLink:", pdfLink)
+	// fmt.Println("pdfLink:", pdfLink)
 
 	pdfInfo, err := GetPdfInfo(pdfLink)
 	if err != nil {
@@ -38,7 +38,7 @@ func downloadPdf(sender_psid string, arguments []string) error {
 
 	// get pdf path link
 	pdfFilePath := "https://z45st682fx.zlib-cdn.com/dl2.php?id=" + strings.Split(pdfInfo.SessionID, "_")[0] + "&h=" + strings.Split(pdfInfo.SessionID, "_")[1] + "&u=cache&ext=pdf&n=Living%20in%20the%20light%20a%20guide%20to%20personal%20transformation"
-	fmt.Println("pdf link Path:", pdfFilePath)
+	// fmt.Println("pdf link Path:", pdfFilePath)
 
 	// download and send pdf
 	fileDownloader.DownloadAndSendFileWithFiber(sender_psid, pdfFilePath, "./public/src/pdfs/", formats.ToFileNameString(pdfInfo.Name), "_pac.pdf", config.PdfChunksMaxSize, "file")

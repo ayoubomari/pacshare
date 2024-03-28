@@ -29,7 +29,7 @@ func facebookSendRequest(sender_psid string, requestBodyBytes []byte, Errornotif
 	if err != nil {
 		return fmt.Errorf("facebookSendRequest: %w", err)
 	}
-	fmt.Println(string(bodyBytes))
+	// fmt.Println(string(bodyBytes))
 	var bodyJson facebook.CallSendAPIResonse
 	err = json.Unmarshal(bodyBytes, &bodyJson)
 	if err != nil {
@@ -159,9 +159,9 @@ func CallSendAPIWithCallback(sender_psid string, response interface{}, cb func(e
 // Send Message by chunks (by the max size of a facebook message)
 func SendMessageByChunks(sender_psid string, message string) error {
 	totalMessages := (len(message) + config.MaxMessageLength - 1) / config.MaxMessageLength
-	fmt.Println("totalMessages:", totalMessages)
+	// fmt.Println("totalMessages:", totalMessages)
 	for i := 0; i < totalMessages; i++ {
-		fmt.Println("i:", i)
+		// fmt.Println("i:", i)
 		start := i * config.MaxMessageLength
 		var end int
 		if i == totalMessages-1 {
@@ -169,9 +169,9 @@ func SendMessageByChunks(sender_psid string, message string) error {
 		} else {
 			end = (i + 1) * config.MaxMessageLength
 		}
-		fmt.Println("start:", start)
-		fmt.Println("end:", end)
-		fmt.Println("subText:", message[start:end])
+		// fmt.Println("start:", start)
+		// fmt.Println("end:", end)
+		// fmt.Println("subText:", message[start:end])
 		DescriptionResponse := facebook.ResponseMessage{
 			Text: message[start:end],
 		}
