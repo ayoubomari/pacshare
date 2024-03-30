@@ -24,7 +24,7 @@ func listenYt(sender_psid string, arguments []string) error {
 	videoFormatsAndDetails, err := getVideoFormatsUrls(arguments[0])
 	if errors.Is(err, ErrVideoWayWasDeleted) {
 		response := facebook.ResponseMessage{
-			Text: "The video may have been removed from YouTube.",
+			Text: "Something went wrong. Please try again.",
 		}
 		facebookSender.CallSendAPI(sender_psid, response)
 		return nil
