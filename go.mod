@@ -7,7 +7,10 @@ require (
 	github.com/gofiber/fiber/v2 v2.52.0
 )
 
+require golang.org/x/text v0.14.0 // indirect
+
 require (
+	github.com/TwiN/go-away v1.6.13
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/andybalholm/cascadia v1.2.0 // indirect
 	github.com/google/uuid v1.5.0 // indirect

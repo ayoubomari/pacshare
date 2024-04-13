@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 
+	goaway "github.com/TwiN/go-away"
 	"github.com/ayoubomari/pacshare/app/controllers/facebookSender"
 	"github.com/ayoubomari/pacshare/app/models/facebook"
 	"github.com/ayoubomari/pacshare/config"
@@ -41,6 +42,14 @@ type scrapeYtResponseBody struct {
 }
 
 func scrapeYt(sender_psid string, searchKeyWords string) error {
+	if goaway.IsProfane(searchKeyWords) {
+		response := facebook.ResponseMessage{
+			Text: "🤔",
+		}
+		facebookSender.CallSendAPI(sender_psid, response)
+		return nil
+	}
+
 	jsonBytes := []byte(`{"context":{"client":{"hl":"en","gl":"MA","remoteHost":"41.141.106.74","deviceMake":"","deviceModel":"","visitorData":"CgtYUEFKMFBFX05HdyjY_fWLBg%3D%3D","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36,gzip(gfe)","clientName":"WEB","clientVersion":"2.20211029.00.00","osName":"Windows","osVersion":"10.0","originalUrl":"https://www.youtube.com/resultssearch_query=youtube&sp=EgQQAVgD","platform":"DESKTOP","clientFormFactor":"UNKNOWN_FORM_FACTOR","configInfo":{"appInstallData":"CNj99YsGEODWrQUQktWtBRC3y60FELDUrQUQ47v9EhDU0K0FENi-rQUQkfj8Eg%3D%3D"},"timeZone":"Africa/Casablanca","browserName":"Chrome","browserVersion":"95.0.4638.54","screenWidthPoints":1440,"screenHeightPoints":241,"screenPixelDensity":1,"screenDensityFloat":1,"utcOffsetMinutes":60,"userInterfaceTheme":"USER_INTERFACE_THEME_LIGHT","mainAppWebInfo":{"graftUrl":"/resultssearch_query=hello+world&sp=EgQQAVgD","webDisplayMode":"WEB_DISPLAY_MODE_BROWSER","isWebNativeShareAvailable":true}},"user":{"enableSafetyMode":true,"lockedSafetyMode":false},"request":{"useSsl":true,"internalExperimentFlags":[],"consistencyTokenJars":[]},"clickTracking":{"clickTrackingParams":"CDYQk3UYACITCJScqPnT8vMCFYsQBgAdoiQKCQ=="},"adSignalsInfo":{"params":[{"key":"dt","value":"1635614426721"},{"key":"flash","value":"0"},{"key":"frm","value":"0"},{"key":"u_tz","value":"60"},{"key":"u_his","value":"7"},{"key":"u_h","value":"900"},{"key":"u_w","value":"1440"},{"key":"u_ah","value":"860"},{"key":"u_aw","value":"1440"},{"key":"u_cd","value":"24"},{"key":"bc","value":"31"},{"key":"bih","value":"241"},{"key":"biw","value":"1424"},{"key":"brdim","value":"0,0,0,0,1440,0,1440,860,1440,241"},{"key":"vis","value":"1"},{"key":"wgl","value":"true"},{"key":"ca_type","value":"image"}]}},"query": "` + searchKeyWords + `","params":"EgQQAVgD"}`)
 
 	res, err := request.JSONReqest(
