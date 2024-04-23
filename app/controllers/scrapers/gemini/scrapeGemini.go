@@ -132,11 +132,11 @@ func getAnserGeminiPro(question string) (string, error) {
 		return "", fmt.Errorf("getAnserGeminiPro: no ansert found %w", err)
 	}
 
-	anser, err := formats.Utf8ToBase64(bodyJson.Candidates[0].Content.Parts[0].Text)
-	if err != nil {
-		return "", fmt.Errorf("error converting utf8 to base64: %w", err)
-	}
-	return anser, nil
+	// anser, err := formats.Utf8ToBase64(bodyJson.Candidates[0].Content.Parts[0].Text)
+	// if err != nil {
+	// 	return "", fmt.Errorf("error converting utf8 to base64: %w", err)
+	// }
+	return bodyJson.Candidates[0].Content.Parts[0].Text, nil
 }
 
 // todo: write a function that return the anser using gemini pro vesion api (use it only if there is an image)
@@ -169,9 +169,9 @@ func getAnserGeminiProVision(question string, mimeType string, imageContentBase6
 		return "", fmt.Errorf("getAnserGeminiProVision: no ansert found %w", err)
 	}
 
-	anser, err := formats.Utf8ToBase64(bodyJson.Candidates[0].Content.Parts[0].Text)
-	if err != nil {
-		return "", fmt.Errorf("error converting utf8 to base64: %w", err)
-	}
-	return anser, nil
+	// anser, err := formats.Utf8ToBase64(bodyJson.Candidates[0].Content.Parts[0].Text)
+	// if err != nil {
+	// 	return "", fmt.Errorf("error converting utf8 to base64: %w", err)
+	// }
+	return bodyJson.Candidates[0].Content.Parts[0].Text, nil
 }

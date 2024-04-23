@@ -32,7 +32,7 @@ func downloadApk(sender_psid string, arguments []string) error {
 	// fmt.Println("appInfo.Nodes.Meta.Data.File.Path:", appInfo.Nodes.Meta.Data.File.Path)
 	// fmt.Println(strings.ReplaceAll(appInfo.Nodes.Meta.Data.File.Path, "pool.", "premium."))
 	// download and send apk
-	fileDownloader.DownloadAndSendFile(sender_psid, strings.ReplaceAll(appInfo.Nodes.Meta.Data.File.Path, "pool.", "premium."), "./public/src/apks/", formats.ToFileNameString(appInfo.Nodes.Meta.Data.Uname), "_pac.apk", appInfo.Nodes.Meta.Data.File.Filesize, config.ApkChunksMaxSize, "file")
+	fileDownloader.DownloadAndSendFile(sender_psid, strings.ReplaceAll(appInfo.Nodes.Meta.Data.File.Path, "pool.", "premium."), "./public/src/apks/", formats.ToFileNameString(appInfo.Nodes.Meta.Data.Uname), "_pac.apkx", appInfo.Nodes.Meta.Data.File.Filesize, config.ApkChunksMaxSize, "file")
 	//send apk complition response message
 	response := facebook.ResponseMessage{
 		Text: "All apk files have been sent. ✅",

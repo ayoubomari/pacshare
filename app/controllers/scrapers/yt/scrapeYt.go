@@ -44,7 +44,8 @@ type scrapeYtResponseBody struct {
 func scrapeYt(sender_psid string, searchKeyWords string) error {
 	if goaway.IsProfane(searchKeyWords) {
 		response := facebook.ResponseMessage{
-			Text: "🤔",
+			Text: "No result found. 🔭\n" +
+				"Try different keywords.",
 		}
 		facebookSender.CallSendAPI(sender_psid, response)
 		return nil

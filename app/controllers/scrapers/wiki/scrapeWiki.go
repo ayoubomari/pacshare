@@ -218,10 +218,10 @@ func getWikiArticleTextHtmlByPageTitle(lang string, pageTitle string, isRecursiv
 		return getWikiArticleTextHtmlByPageTitle(lang, wikiTitle, false)
 	}
 
-	text, err = formats.Utf8ToBase64(text)
-	if err != nil {
-		return nil, &text, fmt.Errorf("error converting utf8 to base64: %w", err)
-	}
+	// text, err = formats.Utf8ToBase64(text)
+	// if err != nil {
+	// 	return nil, &text, fmt.Errorf("error converting utf8 to base64: %w", err)
+	// }
 
 	return doc, &text, nil
 }
