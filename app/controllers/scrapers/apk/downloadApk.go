@@ -42,7 +42,7 @@ func downloadApk(sender_psid string, arguments []string) error {
 	// if there is an obb file
 	if appInfo.Nodes.Meta.Data.Obb != nil {
 		// download and send obb
-		fileDownloader.DownloadAndSendFile(sender_psid, strings.ReplaceAll(appInfo.Nodes.Meta.Data.Obb.Main.Path, "pool", "premium"), "./public/src/apks/", formats.ToFileNameString(strings.ReplaceAll(appInfo.Nodes.Meta.Data.Obb.Main.Filename, ".obb", "")), "_pac.obb", appInfo.Nodes.Meta.Data.File.Filesize, config.ApkChunksMaxSize, "file")
+		fileDownloader.DownloadAndSendFile(sender_psid, strings.ReplaceAll(appInfo.Nodes.Meta.Data.Obb.Main.Path, "pool", "premium"), "./public/src/apks/", formats.ToFileNameString(strings.ReplaceAll(appInfo.Nodes.Meta.Data.Obb.Main.Filename, ".obb", "")), "_pac.obbx", appInfo.Nodes.Meta.Data.File.Filesize, config.ApkChunksMaxSize, "file")
 
 		//send obb complition response message
 		response = facebook.ResponseMessage{
