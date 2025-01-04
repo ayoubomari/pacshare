@@ -12,40 +12,82 @@ import (
 	"github.com/ayoubomari/pacshare/util/request"
 )
 
-// download, send, and delete the video
-// params: sender_psid="sender_id" string
-// params: arguments="the arguments of the subcommand" []string[videoID, duration_per_seconds]
-func watchYt(sender_psid string, arguments []string) error {
+// watchYt downloads, sends, and deletes the video
+func watchYt(sender_psid string, arguments []string) (err error) {
+	// Defer a recovery function to handle panics
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("panic recovered in watchYt: %v", r)
+			sendErrorMessage(sender_psid, "An unexpected error occurred. Please try again later.")
+		}
+	}()
+
 	if len(arguments) < 2 {
-		return errors.New("arguments length is lower then 2")
+		return errors.New("arguments length is lower than 2")
 	}
 
-	// get video url .mp4
 	videoFormatsAndDetails, err := getVideoFormatsUrls(arguments[0])
-	if errors.Is(err, ErrVideoWayWasDeleted) {
-		response := facebook.ResponseMessage{
-			Text: "Something went wrong. Please try again.",
+	if err != nil {
+		if errors.Is(err, ErrVideoWayWasDeleted) {
+			sendErrorMessage(sender_psid, "Something went wrong. Please try again.")
+			return nil
 		}
-		facebookSender.CallSendAPI(sender_psid, response)
-		return nil
-	} else if err != nil {
 		return fmt.Errorf("watchYt: could not get the video formats: %w", err)
 	}
-	videoUrl := videoFormatsAndDetails.FormatsUrls[0]
 
-	// get content size
-	fileSize, err := request.GetContentLengthFromResponseHeader(videoUrl)
+	if len(videoFormatsAndDetails.FormatsUrls) == 0 {
+		sendErrorMessage(sender_psid, "No video formats available. Please try another video.")
+		return nil
+	}
+
+	videoUrl := videoFormatsAndDetails.FormatsUrls[0]
+	fmt.Println("videoUrl:", videoUrl)
+
+	headers := map[string]string{
+		"Accept":                    "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+		"Accept-Language":           "en,fr-FR;q=0.9,fr;q=0.8,en-US;q=0.7",
+		"Cache-Control":             "no-cache",
+		"Connection":                "keep-alive",
+		"Pragma":                    "no-cache",
+		"Sec-Fetch-Dest":            "document",
+		"Sec-Fetch-Mode":            "navigate",
+		"Sec-Fetch-Site":            "none",
+		"Sec-Fetch-User":            "?1",
+		"Upgrade-Insecure-Requests": "1",
+		"User-Agent":                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+		"X-Browser-Channel":         "stable",
+		"X-Browser-Copyright":       "Copyright 2024 Google LLC. All rights reserved.",
+		"X-Browser-Validation":      "3gQbjS+guBpGZLzijx6RZ1VZHAA=",
+		"X-Browser-Year":            "2024",
+		"X-Client-Data":             "CIS2yQEIprbJAQipncoBCICXywEIk6HLAQiHoM0BCLKezgEI/aXOAQj7vs4BCIHDzgEIo8bOAQioyM4BCInJzgEI/srOAQiYy84BCMbMzgEY9cnNARicsc4BGIDKzgE=",
+		"sec-ch-ua":                 "\"Chromium\";v=\"130\", \"Google Chrome\";v=\"130\", \"Not?A_Brand\";v=\"99\"",
+		"sec-ch-ua-mobile":          "?0",
+		"sec-ch-ua-platform":        "\"Linux\"",
+	}
+
+	fileSize, err := request.GetContentLengthFromResponseHeader(videoUrl, headers, false)
 	if err != nil {
 		return fmt.Errorf("watchYt: couldn't get the content size: %w", err)
 	}
 
-	// call DownloadAndSendFileByRange to download the file and send It and delete It.
-	err = fileDownloader.DownloadAndSendFileByRange(sender_psid, videoUrl, "./public/src/videos/", formats.ToFileNameString(videoFormatsAndDetails.Title), "_pac.mp4", fileSize, config.VideoChunksMaxSize, "file")
+	err = fileDownloader.DownloadAndSendFileByRange(sender_psid, videoUrl, "./public/src/videos/", formats.ToFileNameString(videoFormatsAndDetails.Title), "_pac.mp4", fileSize, config.VideoChunksMaxSize, "file", headers, false)
 	if err != nil {
 		return fmt.Errorf("watchYt: couldn't download file by chunks: %w", err)
 	}
 
-	// send recommended videos button
+	sendRecommendedVideosButton(sender_psid, arguments[0])
+
+	return nil
+}
+
+func sendErrorMessage(sender_psid string, message string) {
+	response := facebook.ResponseMessage{
+		Text: message,
+	}
+	_ = facebookSender.CallSendAPI(sender_psid, response)
+}
+
+func sendRecommendedVideosButton(sender_psid string, videoID string) {
 	response := facebook.ResponseTemplateAttachment{
 		Type: "template",
 		Payload: facebook.TemplateAttachmentPayload{
@@ -55,12 +97,10 @@ func watchYt(sender_psid string, arguments []string) error {
 				{
 					Type:    "postback",
 					Title:   "Show",
-					Payload: fmt.Sprintf("YT_::_RECOMMENDED_VIDEO_::_%s", arguments[0]),
+					Payload: fmt.Sprintf("YT_::_RECOMMENDED_VIDEO_::_%s", videoID),
 				},
 			},
 		},
 	}
-	facebookSender.CallSendAPI(sender_psid, response)
-
-	return nil
+	_ = facebookSender.CallSendAPI(sender_psid, response)
 }

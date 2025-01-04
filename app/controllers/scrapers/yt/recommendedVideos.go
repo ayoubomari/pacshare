@@ -34,6 +34,7 @@ func recommendedVideos(sender_psid string, arguments []string) error {
 		fmt.Sprintf("%s/api/v1/videos/%s?fields=recommendedVideos", config.InvidiousEndpoint, videoID),
 		nil,
 		nil,
+		false,
 	)
 	if err != nil {
 		return fmt.Errorf("VetvideoFormatsUrls: json requeset err: %w", err)

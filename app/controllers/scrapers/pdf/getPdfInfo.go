@@ -3,21 +3,28 @@ package pdf
 import (
 	"fmt"
 	"regexp"
+	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/ayoubomari/pacshare/app/models/pdfModels"
 	"github.com/ayoubomari/pacshare/util/request"
 )
 
-// get pdf info by scrapping the pdfLink html page
+// GetPdfInfo retrieves PDF information by scraping the pdfLink HTML page
 func GetPdfInfo(pdfLink string) (pdfModels.ApkInfo, error) {
 	var apkInfo pdfModels.ApkInfo
+
+	// Ensure pdfLink is not empty
+	if pdfLink == "" {
+		return apkInfo, fmt.Errorf("GetPdfInfo: empty pdfLink")
+	}
 
 	res, err := request.JSONReqest(
 		"GET",
 		fmt.Sprintf("https://www.pdfdrive.com%s", pdfLink),
 		nil,
 		nil,
+		false,
 	)
 	if err != nil {
 		return apkInfo, fmt.Errorf("GetPdfInfo: %w", err)
@@ -29,25 +36,26 @@ func GetPdfInfo(pdfLink string) (pdfModels.ApkInfo, error) {
 		return apkInfo, fmt.Errorf("GetPdfInfo: %w", err)
 	}
 
-	conver, _ := doc.Find(".ebook-left").First().Find("img").First().Attr("src")
-	name := doc.Find(".ebook-right-inner").First().Find("h1").Text()
-	author := doc.Find(".card-author").First().Text()
-	fileSize := doc.Find(".ebook-file-info").Children().Eq(4).Text()
-	pagesNum := doc.Find(".ebook-file-info").Children().Eq(0).Text()
-	language := doc.Find(".ebook-file-info").Children().Eq(6).Text()
+	cover, _ := doc.Find(".ebook-left").First().Find("img").First().Attr("src")
+	name := strings.TrimSpace(doc.Find(".ebook-right-inner").First().Find("h1").Text())
+	author := strings.TrimSpace(doc.Find(".card-author").First().Text())
+	fileSize := strings.TrimSpace(doc.Find(".ebook-file-info").Children().Eq(4).Text())
+	pagesNum := strings.TrimSpace(doc.Find(".ebook-file-info").Children().Eq(0).Text())
+	language := strings.TrimSpace(doc.Find(".ebook-file-info").Children().Eq(6).Text())
 
-	// get session
+	// Get session
 	dataPreview, _ := doc.Find(".ebook-buttons").First().Find("button").First().Attr("data-preview")
 	sessionID := ""
-	dataPreviewSlices := regexp.MustCompile("=|&").Split(dataPreview, -1)
-	if len(dataPreviewSlices) >= 4 {
-		sessionID = fmt.Sprintf("%s_%s", dataPreviewSlices[1], dataPreviewSlices[3])
+	if dataPreview != "" {
+		dataPreviewSlices := regexp.MustCompile(`=|&`).Split(dataPreview, -1)
+		if len(dataPreviewSlices) >= 4 {
+			sessionID = fmt.Sprintf("%s_%s", dataPreviewSlices[1], dataPreviewSlices[3])
+		}
 	}
-	// fmt.Println("sessionID:", sessionID)
 
-	// build the return
+	// Build the return apkInfo
 	apkInfo = pdfModels.ApkInfo{
-		Cover:     conver,
+		Cover:     cover,
 		Name:      name,
 		Author:    author,
 		FileSize:  fileSize,

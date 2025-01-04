@@ -32,6 +32,7 @@ func photoApk(sender_psid string, arguments []string) error {
 		fmt.Sprintf("https://%s.en.aptoide.com/app", appInfo.Nodes.Meta.Data.Uname),
 		nil,
 		nil,
+		false,
 	)
 	if err != nil {
 		facebookSender.CallSendAPI(sender_psid, SomethingWasWrong)

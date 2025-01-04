@@ -42,6 +42,7 @@ func scrapeApk(sender_psid string, searchKeyWords string) error {
 			"Pragma":                    "no-cache",
 			"Cache-Control":             "no-cache",
 		},
+		false,
 	)
 	if err != nil {
 		return fmt.Errorf("scrapeApk: %w", err)

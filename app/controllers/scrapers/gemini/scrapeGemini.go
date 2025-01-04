@@ -112,6 +112,7 @@ func getAnserGeminiPro(question string) (string, error) {
 		"http://129.151.173.72/geminipro",
 		jsonBytes,
 		nil,
+		false,
 	)
 	if err != nil {
 		return "", fmt.Errorf("getAnserGeminiPro: json requeset err: %w", err)
@@ -149,6 +150,7 @@ func getAnserGeminiProVision(question string, mimeType string, imageContentBase6
 		"http://129.151.173.72/geminivesionpro",
 		jsonBytesVision,
 		nil,
+		false,
 	)
 	if err != nil {
 		return "", fmt.Errorf("getAnserGeminiProVision: json requeset err: %w", err)

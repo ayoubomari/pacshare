@@ -24,9 +24,9 @@ func TestSendFacebookMessage(t *testing.T) {
 func TestSendFacebookMediaAttachment(t *testing.T) {
 	sender_psid := "4345084215546247"
 	response := facebook.ResponseMediaAttachment{
-		Type: "image",
+		Type: "file",
 		Payload: facebook.WebhookBodyAttachmentPayload{
-			URL:         "https://static.wikia.nocookie.net/pacman/images/2/24/Pac-Man-0.png/revision/latest?cb=20190526005949",
+			URL:         "https://www.emse.fr/~picard/cours/1A/java/livretJava.pdf",
 			Is_reusable: false,
 		},
 	}

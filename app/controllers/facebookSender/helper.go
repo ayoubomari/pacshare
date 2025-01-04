@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"time"
 
 	"github.com/ayoubomari/pacshare/app/models/facebook"
 	"github.com/ayoubomari/pacshare/config"
@@ -19,6 +20,7 @@ func facebookSendRequest(sender_psid string, requestBodyBytes []byte, Errornotif
 		fmt.Sprintf("https://graph.facebook.com/v%s.0/%s/messages?access_token=%s", os.Getenv("GRAPHQL_V"), os.Getenv("FACEBOOK_PAGE_ID"), os.Getenv("FACEBOOK_PAGE_ACCESS_TOKEN")),
 		requestBodyBytes,
 		nil,
+		false,
 	)
 	if err != nil {
 		return fmt.Errorf("facebookSendRequest: %w", err)
@@ -26,6 +28,7 @@ func facebookSendRequest(sender_psid string, requestBodyBytes []byte, Errornotif
 	defer res.Body.Close()
 
 	bodyBytes, err := io.ReadAll(res.Body)
+	// fmt.Println("bodyBytes: ", string(bodyBytes))
 	if err != nil {
 		return fmt.Errorf("facebookSendRequest: %w", err)
 	}
@@ -156,29 +159,33 @@ func CallSendAPIWithCallback(sender_psid string, response interface{}, cb func(e
 	return nil
 }
 
-// Send Message by chunks (by the max size of a facebook message)
+// SendMessageByChunks sends a message in chunks, respecting Facebook's message length limit
 func SendMessageByChunks(sender_psid string, message string) error {
-	totalMessages := (len(message) + config.MaxMessageLength - 1) / config.MaxMessageLength
-	// fmt.Println("totalMessages:", totalMessages)
-	for i := 0; i < totalMessages; i++ {
-		// fmt.Println("i:", i)
-		start := i * config.MaxMessageLength
-		var end int
-		if i == totalMessages-1 {
-			end = len(message)
-		} else {
-			end = (i + 1) * config.MaxMessageLength
-		}
-		// fmt.Println("start:", start)
-		// fmt.Println("end:", end)
-		// fmt.Println("subText:", message[start:end])
-		DescriptionResponse := facebook.ResponseMessage{
-			Text: message[start:end],
-		}
-		go CallSendAPI(sender_psid, DescriptionResponse)
-	}
+    totalMessages := (len(message) + config.MaxMessageLength - 1) / config.MaxMessageLength
 
-	return nil
+    for i := 0; i < totalMessages; i++ {
+        start := i * config.MaxMessageLength
+        end := (i + 1) * config.MaxMessageLength
+        if end > len(message) {
+            end = len(message)
+        }
+
+        response := facebook.ResponseMessage{
+            Text: message[start:end],
+        }
+
+        err := CallSendAPI(sender_psid, response)
+        if err != nil {
+            return fmt.Errorf("failed to send chunk %d: %w", i+1, err)
+        }
+
+        // Wait for 1.5 seconds before sending the next chunk
+        if i < totalMessages-1 {
+            time.Sleep(1500 * time.Millisecond)
+        }
+    }
+
+    return nil
 }
 
 func GetMessageInfo(mid string) (facebook.ConversationMessage, error) {
@@ -188,6 +195,7 @@ func GetMessageInfo(mid string) (facebook.ConversationMessage, error) {
 		fmt.Sprintf("https://graph.facebook.com/v%s.0/%s?fields=from,message,attachments&access_token=%s", os.Getenv("GRAPHQL_V"), mid, os.Getenv("FACEBOOK_PAGE_ACCESS_TOKEN")),
 		nil,
 		nil,
+		false,
 	)
 	if err != nil {
 		return conversationMessage, fmt.Errorf("GetMessageInfo: %w", err)
@@ -213,6 +221,7 @@ func GetSenderInfo(sender_psid string) (facebook.SenderInfo, error) {
 		fmt.Sprintf("https://graph.facebook.com/%s?fields=first_name,last_name,profile_pic&access_token=%s", sender_psid, os.Getenv("FACEBOOK_PAGE_ACCESS_TOKEN")),
 		nil,
 		nil,
+		false,
 	)
 	if err != nil {
 		return senderInfo, fmt.Errorf("GetSenderInfo: %w", err)

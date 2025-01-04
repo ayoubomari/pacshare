@@ -17,6 +17,27 @@ var (
 )
 
 func main() {
+	// // proxy list update ticker
+	// proxyUpdateTicker := time.NewTicker(24 * time.Hour)
+
+	// err := proxy.UpdateProxiesFromURL()
+	// if err != nil {
+	// 	fmt.Println("Error updating proxies:", err)
+	// 	os.Exit(1)
+	// }
+	// go func() {
+    //     for t := range proxyUpdateTicker.C {
+	// 		fmt.Println("Tick at", t)
+	// 		err := proxy.UpdateProxiesFromURL()
+	// 		if err != nil {
+	// 			fmt.Println("Error updating proxies:", err)
+	// 			os.Exit(1)
+	// 		}
+    //     }
+    // }()
+
+
+
 	// Parse command-line flags
 	flag.Parse()
 

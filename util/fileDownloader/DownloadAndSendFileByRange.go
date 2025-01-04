@@ -5,38 +5,61 @@ import (
 	"io"
 	"math/rand"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/ayoubomari/pacshare/app/controllers/facebookSender"
 	"github.com/ayoubomari/pacshare/app/models/facebook"
+	"github.com/ayoubomari/pacshare/config"
 	"github.com/ayoubomari/pacshare/util/fs"
 )
 
-// download file by chunks usign request range header
-func DownloadAndSendFileByRange(sender_psid string, mediaUrl string, outputPath string, fileName string, fileExtentions string, contentSize int, chunkSize int, responseMediaType string) error {
+// DownloadAndSendFileByRange downloads a file in chunks using the Range header and sends it
+func DownloadAndSendFileByRange(sender_psid string, mediaUrl string, outputPath string, fileName string, fileExtentions string, contentSize int, chunkSize int, responseMediaType string, headers map[string]string, useProxy bool) error {
 	randomNumber := rand.Intn(1000)
 	numChunks := (contentSize + chunkSize - 1) / chunkSize
 	fileNamePattern := outputPath + fileName + "_" + fmt.Sprint(randomNumber) + "." + fmt.Sprint(numChunks) + "_" + "%d" + fileExtentions
-
-	// Initialize HTTP client
-	client := &http.Client{}
 
 	// waitgroup
 	var wg sync.WaitGroup
 
 	// Download the file in chunks
 	var offset int
-	for i := 0; i < numChunks; i++ {
+	for i := 0; i < 1; /*numChunks*/ i++ {
 		wg.Add(1)
 		go func(goOffset int, goFileNumber int) {
+			// Get the next proxy
+			proxyURL, err := url.Parse(config.GetNextProxy())
+			if err != nil {
+				fmt.Println("Invalid proxy URL:", err)
+				return
+			}
+
+			// Set up the proxy client
+			client := &http.Client{}
+			if useProxy {
+				client = &http.Client{
+					Transport: &http.Transport{
+						Proxy: http.ProxyURL(proxyURL),
+					},
+					Timeout: 10 * time.Second,
+				}
+			}
+
 			// Create HTTP GET request
 			req, err := http.NewRequest("GET", mediaUrl, nil)
 			if err != nil {
 				fmt.Println("err:", err)
 				wg.Done()
 				return
+			}
+
+			// Add the custom headers to the request
+			for key, value := range headers {
+				req.Header.Set(key, value)
 			}
 
 			outputFileFullPathName := fmt.Sprintf(fileNamePattern, goFileNumber)
@@ -55,8 +78,9 @@ func DownloadAndSendFileByRange(sender_psid string, mediaUrl string, outputPath 
 				endRange = contentSize - 1
 			}
 
-			// add the range to the request header
+			// Add the range to the request header
 			req.Header.Set("Range", fmt.Sprintf("bytes=%d-%d", goOffset, endRange))
+
 			// Perform the HTTP request
 			resp, err := client.Do(req)
 			if err != nil {
@@ -70,14 +94,13 @@ func DownloadAndSendFileByRange(sender_psid string, mediaUrl string, outputPath 
 			// Write the response body to the output file
 			_, err = io.Copy(outputFile, resp.Body)
 			if err != nil {
-				wg.Done()
 				fs.DeleteFile(outputFileFullPathName)
 				wg.Done()
 				return
 			}
 
 			fileUrl := fmt.Sprintf("https://pacshare.omzor.com/%s", strings.ReplaceAll(outputFileFullPathName, "./public/", ""))
-			// send the file to the client and remove it
+			// Send the file to the client and remove it
 			response := facebook.ResponseMediaAttachment{
 				Type: responseMediaType,
 				Payload: facebook.WebhookBodyAttachmentPayload{
@@ -86,7 +109,7 @@ func DownloadAndSendFileByRange(sender_psid string, mediaUrl string, outputPath 
 				},
 			}
 			facebookSender.CallSendAPI(sender_psid, response)
-			fs.DeleteFile(outputFileFullPathName)
+			// fs.DeleteFile(outputFileFullPathName)
 
 			wg.Done()
 		}(offset, i+1)
@@ -97,7 +120,7 @@ func DownloadAndSendFileByRange(sender_psid string, mediaUrl string, outputPath 
 
 	wg.Wait()
 
-	//send complition response message
+	// Send completion response message
 	response := facebook.ResponseMessage{
 		Text: "All files have been sent. ✅",
 	}
