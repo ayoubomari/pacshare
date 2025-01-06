@@ -1,3 +1,3 @@
 package config
 
-var InvidiousEndpoint = "https://invidious.jing.rocks"
+var InvidiousEndpoint = "http://localhost:3000"

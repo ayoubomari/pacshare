@@ -6,17 +6,20 @@ import (
 
 	"github.com/ayoubomari/pacshare/app/controllers/facebookSender"
 	"github.com/ayoubomari/pacshare/app/controllers/scrapers/apk"
+	"github.com/ayoubomari/pacshare/app/controllers/scrapers/gemini"
 	"github.com/ayoubomari/pacshare/app/controllers/scrapers/pdf"
 	"github.com/ayoubomari/pacshare/app/controllers/scrapers/wiki"
 	"github.com/ayoubomari/pacshare/app/controllers/scrapers/yt"
 	"github.com/ayoubomari/pacshare/app/models/facebook"
 )
 
-// "📺 .yt - Search and download YouTube videos\n" +
 var MenuResponse = facebook.ResponseMessage{
 	Text: "🚀 Welcome to PacShare! Here are the available commands:\n\n" +
 		"📚 .wiki - Search Wikipedia articles\n" +
-		"📄 .pdf - Search and download PDF documents\n\n",
+		"📄 .pdf - Search and download PDF documents\n" +
+		"📺 .yt - Search and download YouTube videos\n" +
+		"📱 .apk - Search and download APK files\n" +
+		"💡 .ai - Ask AI anything or get assistance with text, summaries, and more\n\n",
 	// "💡 Tip: You can also send a YouTube link directly!\n" +
 	// "🔭 For more information, please visit https://fb.com/pacshare1/",
 }
@@ -69,11 +72,11 @@ func handleMessage(sender_psid string, message facebook.Message) error {
 		return pdf.RegexHundlerMessage(sender_psid, match[1:])
 	}
 
-	// // gemeni -> (?i)^(.(ask)) (.+)$
-	// geminiRegex := regexp.MustCompile("(?i)^(.(gemini|ask)) (.+)$")
-	// if match := geminiRegex.FindStringSubmatch(trimmedMessage); match != nil {
-	// 	return gemini.RegexHundlerMessage(sender_psid, match[1:], message.Reply_to.MID)
-	// }
+	// gemeni -> (?i)^(.(ai)) (.+)$
+	geminiRegex := regexp.MustCompile("(?i)^(.(ask|ai)) (.+)$")
+	if match := geminiRegex.FindStringSubmatch(trimmedMessage); match != nil {
+		return gemini.RegexHundlerMessage(sender_psid, match[1:], message.Reply_to.MID)
+	}
 
 	// default
 	// return yt.RegexHundlerMessage(
