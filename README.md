@@ -1,12 +1,14 @@
 # PacShare - Facebook Messenger Bot for Limited Internet Access
 
-<div align="center">
-<img src="public/static_src/imgs/run.gif" align="center" style="width: 100%" />
-</div>
-
 <p align="center">
 <a href="https://www.facebook.com/pacshare1" alt="Facebook Page"><img src="https://img.shields.io/badge/Facebook-Page-blue?logo=facebook" /></a>
 </p>
+
+<br>
+
+<div align="center">
+<img src="public/static_src/imgs/run.gif" align="center" style="width: 100%" />
+</div>
 
 PacShare is a Facebook Messenger chatbot that enables users with limited internet access (Meta suit only) to fetch content from various internet sources through Meta's platforms. It serves as a bridge for users to access YouTube videos, APK files, PDFs, Wikipedia articles, and AI assistance through Facebook Messenger.
 
