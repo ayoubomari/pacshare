@@ -1,7 +1,7 @@
 # PacShare - Facebook Messenger Bot for Limited Internet Access
 
 <p align="center">
-<a href="https://www.facebook.com/pacshare1" alt="Facebook Page"><img src="https://img.shields.io/badge/Facebook-Page-blue?logo=facebook" /></a>
+<a href="https://www.facebook.com/pacshare1" alt="Facebook Page" target="_blank"><img src="https://img.shields.io/badge/Facebook-Page-blue?logo=facebook" /></a>
 </p>
 
 <br>
