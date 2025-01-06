@@ -1,7 +1,7 @@
 # PacShare - Facebook Messenger Bot for Limited Internet Access
 
 <div align="center">
-<img src="/ayoubomari/pacshare/raw/public/static_src/imgs/run.gif" align="center" style="width: 100%" />
+<img src="public/static_src/imgs/run.gif" align="center" style="width: 100%" />
 </div>
 
 <p align="center">
