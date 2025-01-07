@@ -65,6 +65,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 MIT License
 
-## Contact
+## Live Demo
 
 - Facebook Page: [@pacshare1](https://www.facebook.com/pacshare1)
